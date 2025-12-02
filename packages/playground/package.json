@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "katex": "^0.16.25",
     "vue": "^3.3.0",
     "x-markdown": "workspace:*"
   },
