@@ -35,11 +35,9 @@ const activeTab = computed({
 const config = computed(() => {
   return {
     showToolbar: true,
-    // showFullscreen: true,
     showZoomIn: true,
     showZoomOut: true,
     showReset: true,
-    // showDownload: true,
     toolbarStyle: {},
     toolbarClass: '',
     iconColor: undefined,
@@ -107,12 +105,6 @@ function handleReset(event: Event) {
   emit('onReset')
 }
 
-// function handleFullscreen(event: Event) {
-//   event.stopPropagation();
-//   event.preventDefault();
-//   emit('onFullscreen');
-// }
-
 function handleToggleCode(event?: Event) {
   if (event) {
     event.stopPropagation()
@@ -120,12 +112,6 @@ function handleToggleCode(event?: Event) {
   }
   emit('onToggleCode')
 }
-
-// function handleDownload(event: Event) {
-//   event.stopPropagation();
-//   event.preventDefault();
-//   emit('onDownload');
-// }
 
 async function handleCopyCode(event: Event) {
   event.stopPropagation()
@@ -204,8 +190,20 @@ function handleTabClickEvent(pane: TabClickEvent) {
     <!-- 左侧 Tabs -->
     <div class="toolbar-left" :style="tabTextColorStyle">
       <div class="toolbar-tabs">
-        <div class="tab-item" :class="{ active: activeTab === 'diagram' }" @click="handleTabClick('diagram')">图片</div>
-        <div class="tab-item" :class="{ active: activeTab === 'code' }" @click="handleTabClick('code')">代码</div>
+        <div
+          class="tab-item"
+          :class="{ active: activeTab === 'diagram' }"
+          @click="handleTabClickEvent({ paneName: 'diagram' })"
+        >
+          图片
+        </div>
+        <div
+          class="tab-item"
+          :class="{ active: activeTab === 'code' }"
+          @click="handleTabClickEvent({ paneName: 'code' })"
+        >
+          代码
+        </div>
       </div>
     </div>
 

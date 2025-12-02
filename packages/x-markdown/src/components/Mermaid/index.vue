@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { MdComponent, MermaidExposeProps, MermaidToolbarConfig } from './types'
 import { debounce } from 'lodash-es'
-import { computed, nextTick, ref, toValue, watch } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import { useMermaid, useMermaidZoom } from '../../hooks'
 // 移除不存在的 MarkdownProvider 导入
 import { copyToClipboard, downloadSvgAsPng } from './composables'
