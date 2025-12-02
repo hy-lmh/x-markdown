@@ -1,24 +1,50 @@
-# 使用
+# X-Markdown 使用指南
+
+## 基础用法
 
 ```vue
-import {MarkdownRenderer,MarkdownRendererAsync} from '@/components/Markdown';
-
 <template>
-  // 同步渲染
-  <MarkdownRenderer class="markdown-render" :markdown="content" />
+  <!-- 同步渲染 -->
+  <MarkdownRenderer :markdown="content" />
 
-  // 异步渲染
+  <!-- 异步渲染（适用于大型文档） -->
   <Suspense>
-    <MarkdownRendererAsync class="markdown-render" :markdown="content" />
+    <MarkdownRendererAsync :markdown="content" />
+    <template #fallback>
+      <div>加载中...</div>
+    </template>
   </Suspense>
 </template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { MarkdownRenderer, MarkdownRendererAsync } from 'x-markdown'
+import 'x-markdown/style'
+
+const content = ref('# Hello World')
+</script>
 ```
 
-## 属性
+## Props 属性
 
-### customAttrs 自定义属性支持
+| 属性 | 类型 | 默认值 | 说明 |
+|------|------|--------|------|
+| `markdown` | `string` | `''` | Markdown 内容 |
+| `allowHtml` | `boolean` | `false` | 是否允许 HTML |
+| `enableLatex` | `boolean` | `true` | 是否启用 LaTeX |
+| `enableAnimate` | `boolean` | `false` | 是否启用流式动画 |
+| `enableBreaks` | `boolean` | `true` | 换行转 `<br>` |
+| `isDark` | `boolean` | `false` | 深色模式 |
+| `codeXProps` | `CodeXProps` | `{}` | 代码块配置 |
+| `codeXRender` | `object` | `{}` | 自定义代码块渲染 |
+| `codeXSlots` | `object` | `{}` | 代码块插槽 |
+| `customAttrs` | `CustomAttrs` | `{}` | 自定义属性 |
+| `remarkPlugins` | `PluggableList` | `[]` | remark 插件 |
+| `rehypePlugins` | `PluggableList` | `[]` | rehype 插件 |
 
-通过 `customAttrs` 可以对 Markdown 渲染的节点动态添加自定义属性：
+## 自定义属性
+
+通过 `customAttrs` 为元素添加自定义属性：
 
 ```ts
 const customAttrs = {
@@ -32,32 +58,75 @@ const customAttrs = {
 }
 ```
 
-### 插槽
+## 自定义插槽
 
-> 组件提供了多个插槽，可以自定义渲染，标签即为插槽,你可以接管任何插槽，自定义渲染逻辑。
-
-**请注意：组件内部拦截了code标签的渲染，支持高亮代码块，mermaid图表等。如果你需要自定义渲染，可以接管code插槽。**
+组件提供多个插槽用于自定义渲染：
 
 ```vue
-<header></header>
+<MarkdownRenderer :markdown="content">
+  <!-- 自定义标题 -->
+  <template #heading="{ node, level, children }">
+    <component :is="`h${level}`" class="custom-heading">
+      <component :is="children" />
+    </component>
+  </template>
 
-<MarkdownRenderer>
- <template #heading="{ node, level }">
-   可自定义标题渲染
- </template>
+  <!-- 自定义引用块 -->
+  <template #blockquote="{ children }">
+    <blockquote class="custom-blockquote">
+      <component :is="children" />
+    </blockquote>
+  </template>
 </MarkdownRenderer>
 ```
 
-### 代码块渲染
+## 代码块配置
 
-组件内置了代码块渲染器，支持高亮代码块，mermaid图表等。
-codeXSlot自定义代码块顶部
-可通过 codeXRender 属性自定义代码块语言渲染器，如下可以自定义 echarts 渲染器：
+### codeXProps 代码块属性
 
-```text
-codeXRender: {
-  echarts: (props) => {
-    return h()
-  },
+```vue
+<MarkdownRenderer
+  :markdown="content"
+  :code-x-props="{
+    codeLightTheme: 'github-light',
+    codeDarkTheme: 'github-dark',
+    showCodeBlockHeader: true,
+    codeMaxHeight: '400px'
+  }"
+/>
+```
+
+### codeXRender 自定义渲染器
+
+```ts
+const codeXRender = {
+  // 自定义 echarts 代码块
+  echarts: (props) => h(EchartsRenderer, { code: props.raw.content }),
+  // 自定义行内代码
+  inline: (props) => h('code', { class: 'custom' }, props.raw.content),
+}
+```
+
+### codeXSlots 代码块插槽
+
+```ts
+const codeXSlots = {
+  'header': ({ language, code, copy, copied }) => { /* 自定义头部 */ },
+  'header-left': ({ language }) => { /* 左侧区域 */ },
+  'header-right': ({ code, copy }) => { /* 右侧区域 */ },
+}
+```
+
+## 流式渲染动画
+
+启用 `enableAnimate` 后，代码 token 会添加 `x-md-animated-word` class：
+
+```vue
+<MarkdownRenderer :markdown="content" :enable-animate="true" />
+```
+
+```css
+.x-md-animated-word {
+  animation: fadeIn 0.3s ease-in-out;
 }
 ```

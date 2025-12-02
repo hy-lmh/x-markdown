@@ -2,13 +2,11 @@
 
 <div align="center">
 
-一个功能强大的 Vue 3 Markdown 组件库
+一个功能强大的 Vue 3 Markdown 渲染组件库，支持流式渲染、代码高亮、LaTeX 数学公式、Mermaid 图表等特性。
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Vue](https://img.shields.io/badge/vue-3.x-brightgreen.svg)](https://vuejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](https://www.typescriptlang.org/)
-
-[English](./docs/README.en.md) | 简体中文
 
 </div>
 
@@ -16,27 +14,27 @@
 
 - 🚀 **Vue 3 组合式 API** - 基于 Vue 3 Composition API 构建
 - 📝 **GitHub Flavored Markdown** - 完整支持 GFM 语法
-- 🎨 **语法高亮** - 内置代码高亮支持，基于 Shiki
+- 🎨 **代码高亮** - 基于 Shiki，支持 100+ 语言和多种主题
+- 🌊 **流式渲染** - 支持 AI 对话场景的实时输出动画
 - 🧮 **LaTeX 数学公式** - 支持行内和块级数学公式渲染
 - 📊 **Mermaid 图表** - 支持流程图、时序图等多种图表
-- 🔒 **安全可靠** - 可选的 HTML 内容清理和消毒
-- 🎯 **TypeScript** - 完整的类型定义支持
+- 🌗 **深色模式** - 内置深浅色主题切换支持
 - 🔌 **高度可定制** - 支持自定义渲染、插槽和属性
-- 🎭 **灵活的插件系统** - 支持 remark 和 rehype 插件
-- 🌗 **深色模式** - 内置深色主题支持
+- 🎭 **灵活的插件系统** - 支持 remark 和 rehype 插件扩展
+- 🔒 **安全可靠** - 可选的 HTML 内容清理和消毒
 - 📦 **Monorepo 架构** - 使用 pnpm workspace 和 Turbo 管理
 
 ## 📦 安装
 
 ```bash
+# pnpm (推荐)
+pnpm add x-markdown
+
 # npm
 npm install x-markdown
 
 # yarn
 yarn add x-markdown
-
-# pnpm
-pnpm add x-markdown
 ```
 
 ### 依赖项
@@ -49,10 +47,8 @@ pnpm add vue@^3.3.0
 
 如果需要 LaTeX 支持，还需要引入 KaTeX 样式:
 
-```vue
-<script setup>
-import 'katex/dist/katex.min.css';
-</script>
+```ts
+import 'katex/dist/katex.min.css'
 ```
 
 ## 🚀 快速开始
@@ -65,15 +61,15 @@ import 'katex/dist/katex.min.css';
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { MarkdownRenderer } from 'x-markdown';
-import 'x-markdown/style';
+import { ref } from 'vue'
+import { MarkdownRenderer } from 'x-markdown'
+import 'x-markdown/style'
 
 const content = ref(`
 # Hello World
 
 This is a **markdown** renderer.
-`);
+`)
 </script>
 ```
 
@@ -92,13 +88,306 @@ This is a **markdown** renderer.
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { MarkdownRendererAsync } from 'x-markdown';
-import 'x-markdown/style';
+import { ref } from 'vue'
+import { MarkdownRendererAsync } from 'x-markdown'
+import 'x-markdown/style'
 
-const content = ref('# Large Document\n...');
+const content = ref('# Large Document\n...')
 </script>
 ```
+
+## 📖 Props 属性
+
+| 属性 | 类型 | 默认值 | 说明 |
+|------|------|--------|------|
+| `markdown` | `string` | `''` | Markdown 字符串内容 |
+| `allowHtml` | `boolean` | `false` | 是否允许渲染 HTML |
+| `enableLatex` | `boolean` | `true` | 是否启用 LaTeX 数学公式支持 |
+| `enableAnimate` | `boolean` | `false` | 是否启用流式动画效果 |
+| `enableBreaks` | `boolean` | `true` | 是否将换行符转换为 `<br>` |
+| `isDark` | `boolean` | `false` | 是否为深色模式 |
+| `codeXProps` | `CodeXProps` | `{}` | 代码块配置选项 |
+| `codeXRender` | `object` | `{}` | 自定义代码块渲染函数 |
+| `codeXSlots` | `object` | `{}` | 自定义代码块插槽 |
+| `customAttrs` | `CustomAttrs` | `{}` | 自定义属性对象 |
+| `remarkPlugins` | `PluggableList` | `[]` | remark 插件列表 |
+| `rehypePlugins` | `PluggableList` | `[]` | rehype 插件列表 |
+| `sanitize` | `boolean` | `false` | 是否启用内容清洗 |
+| `sanitizeOptions` | `SanitizeOptions` | `{}` | 清洗配置选项 |
+
+### CodeXProps 代码块配置
+
+```ts
+interface CodeXProps {
+  codeLightTheme?: BuiltinTheme  // 亮色主题，默认 'vitesse-light'
+  codeDarkTheme?: BuiltinTheme   // 暗色主题，默认 'vitesse-dark'
+  showCodeBlockHeader?: boolean  // 是否显示代码块头部
+  codeMaxHeight?: string         // 代码块最大高度，如 '300px'
+}
+```
+
+```vue
+<MarkdownRenderer
+  :markdown="content"
+  :is-dark="isDark"
+  :code-x-props="{
+    codeLightTheme: 'github-light',
+    codeDarkTheme: 'github-dark',
+    showCodeBlockHeader: true,
+    codeMaxHeight: '400px'
+  }"
+/>
+```
+
+## 🎨 主题配置
+
+### 深色模式
+
+通过 `isDark` 属性控制整体主题：
+
+```vue
+<template>
+  <MarkdownRenderer :markdown="content" :is-dark="isDark" />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const isDark = ref(false)
+
+const toggleTheme = () => {
+  isDark.value = !isDark.value
+}
+</script>
+```
+
+### 代码高亮主题
+
+支持所有 [Shiki 内置主题](https://shiki.style/themes)：
+
+```vue
+<MarkdownRenderer
+  :markdown="content"
+  :code-x-props="{
+    codeLightTheme: 'github-light',
+    codeDarkTheme: 'one-dark-pro'
+  }"
+/>
+```
+
+## 🔧 自定义渲染
+
+### 自定义属性
+
+通过 `customAttrs` 为 Markdown 元素添加自定义属性：
+
+```vue
+<MarkdownRenderer
+  :markdown="content"
+  :custom-attrs="{
+    heading: (node, { level }) => ({
+      class: ['heading', `heading-${level}`],
+      id: `heading-${level}`
+    }),
+    a: (node) => ({
+      target: '_blank',
+      rel: 'noopener noreferrer'
+    })
+  }"
+/>
+```
+
+### 自定义插槽
+
+组件提供了多个插槽，可以自定义任何元素的渲染：
+
+```vue
+<MarkdownRenderer :markdown="content">
+  <!-- 自定义标题渲染 -->
+  <template #heading="{ node, level, children }">
+    <component :is="`h${level}`" class="custom-heading">
+      <component :is="children" />
+    </component>
+  </template>
+
+  <!-- 自定义引用块渲染 -->
+  <template #blockquote="{ children }">
+    <blockquote class="custom-blockquote">
+      <div class="quote-icon">💬</div>
+      <component :is="children" />
+    </blockquote>
+  </template>
+
+  <!-- 自定义链接渲染 -->
+  <template #a="{ node, children }">
+    <a :href="node?.properties?.href" target="_blank" class="custom-link">
+      <component :is="children" />
+      <span>↗</span>
+    </a>
+  </template>
+</MarkdownRenderer>
+```
+
+### 自定义代码块渲染器
+
+通过 `codeXRender` 自定义特定语言的代码块渲染：
+
+```vue
+<script setup>
+import { h } from 'vue'
+import EchartsRenderer from './EchartsRenderer.vue'
+
+const codeXRender = {
+  // 自定义 echarts 代码块渲染
+  echarts: (props) => h(EchartsRenderer, { code: props.raw.content }),
+  // 自定义行内代码渲染
+  inline: (props) => h('code', { class: 'custom-inline' }, props.raw.content)
+}
+</script>
+
+<template>
+  <MarkdownRenderer :markdown="content" :code-x-render="codeXRender" />
+</template>
+```
+
+### 代码块插槽
+
+通过 `codeXSlots` 自定义代码块的头部区域：
+
+```vue
+<script setup>
+import { h } from 'vue'
+
+const codeXSlots = {
+  'header-left': ({ language }) => h('span', { class: 'lang-badge' }, language),
+  'header-right': ({ code, copy }) => h('button', { onClick: () => copy(code) }, '📋 复制')
+}
+</script>
+
+<template>
+  <MarkdownRenderer :markdown="content" :code-x-slots="codeXSlots" />
+</template>
+```
+
+## 🌊 流式渲染动画
+
+启用 `enableAnimate` 属性后，代码块中的每个 token 会添加 `x-md-animated-word` class，可配合 CSS 实现流式输出动画效果：
+
+```vue
+<MarkdownRenderer :markdown="content" :enable-animate="true" />
+```
+
+```css
+/* 自定义动画样式 */
+.x-md-animated-word {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+```
+
+## 🔌 插件系统
+
+### remark 插件
+
+```vue
+<script setup>
+import remarkEmoji from 'remark-emoji'
+
+const remarkPlugins = [remarkEmoji]
+</script>
+
+<template>
+  <MarkdownRenderer :markdown="content" :remark-plugins="remarkPlugins" />
+</template>
+```
+
+### rehype 插件
+
+```vue
+<script setup>
+import rehypeSlug from 'rehype-slug'
+import rehypeAutolinkHeadings from 'rehype-autolink-headings'
+
+const rehypePlugins = [rehypeSlug, rehypeAutolinkHeadings]
+</script>
+
+<template>
+  <MarkdownRenderer :markdown="content" :rehype-plugins="rehypePlugins" />
+</template>
+```
+
+## 🛡️ 安全配置
+
+启用内容清洗以防止 XSS 攻击：
+
+```vue
+<MarkdownRenderer
+  :markdown="untrustedContent"
+  :sanitize="true"
+  :sanitize-options="{
+    allowedTags: ['h1', 'h2', 'p', 'a', 'code', 'pre'],
+    allowedAttributes: {
+      a: ['href', 'target']
+    }
+  }"
+/>
+```
+
+## 📁 项目结构
+
+```
+x-markdown/
+├── packages/
+│   ├── x-markdown/          # 核心组件库
+│   │   ├── src/
+│   │   │   ├── components/  # Vue 组件
+│   │   │   │   ├── CodeBlock/   # 代码块组件（支持高亮、折叠、复制）
+│   │   │   │   ├── CodeLine/    # 行内代码组件（支持高亮）
+│   │   │   │   ├── CodeX/       # 代码渲染调度器
+│   │   │   │   └── Mermaid/     # Mermaid 图表组件
+│   │   │   ├── core/        # 核心渲染逻辑
+│   │   │   ├── hooks/       # 组合式函数
+│   │   │   │   ├── useHighlight.ts  # 代码高亮 Hook
+│   │   │   │   ├── useTheme.ts      # 主题管理 Hook
+│   │   │   │   ├── useComponents.ts # 组件映射 Hook
+│   │   │   │   └── usePlugins.ts    # 插件管理 Hook
+│   │   │   ├── MarkdownRender/      # 主渲染组件
+│   │   │   └── plugins/     # 内置插件
+│   │   └── package.json
+│   └── playground/          # 演示应用
+├── docs/                    # 文档
+├── package.json
+├── pnpm-workspace.yaml
+└── turbo.json
+```
+
+## 🛠️ 开发
+
+```bash
+# 安装依赖
+pnpm install
+
+# 启动开发服务器
+pnpm dev
+
+# 构建
+pnpm build
+
+# 格式化代码
+pnpm format
+```
+
+## 📄 License
+
+[MIT](./LICENSE) License © 2024
 
 ## 📖 API 文档
 
