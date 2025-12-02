@@ -5,7 +5,7 @@ import type { CustomAttrs, SanitizeOptions } from '../core/types';
 import { computed, defineComponent, h, toValue } from 'vue';
 import { VueMarkdown, VueMarkdownAsync } from '../core';
 import { useComponents, usePlugins, useProcessMarkdown } from '../hooks';
-
+import './index.css';
 // Markdown 渲染器 Props 定义
 const markdownRendererProps = {
   // markdown 字符串内容

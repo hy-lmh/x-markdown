@@ -12,6 +12,8 @@ interface UseComponentsOptions {
   isDark?: boolean;
   // 代码块配置
   codeXProps?: CodeXProps;
+  // 是否启用动画效果
+  enableAnimate?: boolean;
 }
 
 /**
@@ -32,7 +34,9 @@ function useComponents(props?: UseComponentsOptions) {
       codeDarkTheme: props?.codeXProps?.codeDarkTheme,
       // 功能配置
       showCodeBlockHeader: props?.codeXProps?.showCodeBlockHeader,
-      codeMaxHeight: props?.codeXProps?.codeMaxHeight
+      codeMaxHeight: props?.codeXProps?.codeMaxHeight,
+      // 动画配置 - 传递 enableAnimate 参数
+      enableAnimate: props?.enableAnimate
     })
   };
   return components;

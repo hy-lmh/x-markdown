@@ -6,6 +6,12 @@ export interface CodeLineProps {
    * 原始数据对象，包含行内代码的完整信息
    */
   raw?: CodeLineRaw;
+  /**
+   * 是否启用动画效果
+   * 启用后会给行内代码添加 x-md-animated-word class
+   * @default false
+   */
+  enableAnimate?: boolean;
 }
 
 /**

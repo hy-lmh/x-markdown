@@ -42,6 +42,10 @@
             换行转 br
           </label>
           <label>
+            <input type="checkbox" v-model="enableAnimate" />
+            动画效果
+          </label>
+          <label>
             <input type="checkbox" v-model="useCustomSlots" />
             自定义插槽
           </label>
@@ -109,6 +113,7 @@
             :enable-latex="enableLatex"
             :allow-html="allowHtml"
             :enable-breaks="enableBreaks"
+            :enable-animate="enableAnimate"
             :is-dark="isDark"
             :code-x-props="codeXProps"
             :code-x-slots="useCustomSlots ? codeXSlots : undefined"
@@ -156,6 +161,7 @@ const isDark = ref(false)
 const enableLatex = ref(true)
 const allowHtml = ref(true)
 const enableBreaks = ref(true)
+const enableAnimate = ref(false)  // 是否启用动画效果
 const useCustomSlots = ref(true)
 
 // 代码块配置选项

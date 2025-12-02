@@ -29,6 +29,12 @@ export interface CodeXProps {
    * @example '300px'
    */
   codeMaxHeight?: string;
+  /**
+   * 是否启用动画效果
+   * 启用后会给每个 token 添加 x-md-animated-word class
+   * @default false
+   */
+  enableAnimate?: boolean;
 }
 
 /**

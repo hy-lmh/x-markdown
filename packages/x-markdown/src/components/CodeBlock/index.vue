@@ -38,8 +38,14 @@
           <span v-for="(line, i) in lines" :key="i" class="x-md-code-line">
             <!-- 空行显示占位符 -->
             <template v-if="!line.length">{{ '\u00A0' }}</template>
-            <!-- 渲染 token -->
-            <span v-else v-for="(token, j) in line" :key="j" :style="getTokenStyle(token)">{{ token.content }}</span>
+            <!-- 渲染 token - 当 enableAnimate 为 true 时添加动画 class -->
+            <span 
+              v-else 
+              v-for="(token, j) in line" 
+              :key="j" 
+              :style="getTokenStyle(token)"
+              :class="{ 'x-md-animated-word': props.enableAnimate }"
+            >{{ token.content }}</span>
           </span>
         </code>
       </pre>
@@ -80,13 +86,17 @@ interface Props {
   codeMaxHeight?: string
   /** 是否显示代码块头部 */
   showCodeBlockHeader?: boolean
+  /** 是否启用动画效果 - 启用后给每个 token 添加 x-md-animated-word class */
+  enableAnimate?: boolean
 }
 
+// 定义组件 props 默认值
 const props = withDefaults(defineProps<Props>(), {
-  lightTheme: 'vitesse-light',
-  darkTheme: 'vitesse-dark',
-  isDark: false,
-  showCodeBlockHeader: true
+  lightTheme: 'vitesse-light',  // 默认亮色主题
+  darkTheme: 'vitesse-dark',    // 默认暗色主题
+  isDark: false,                // 默认亮色模式
+  showCodeBlockHeader: true,    // 默认显示代码块头部
+  enableAnimate: false          // 默认不启用动画
 })
 
 const code = computed(() => props.code.trim())

@@ -28,9 +28,6 @@ export default defineComponent({
       type: Object as PropType<Record<string, SlotFn>>,
       default: () => ({})
     },
-
-    // ==================== 主题配置 ====================
-    /** 是否为暗色模式 */
     isDark: {
       type: Boolean,
       default: false
@@ -45,17 +42,17 @@ export default defineComponent({
       type: String as PropType<BuiltinTheme>,
       default: 'vitesse-dark'
     },
-
-    // ==================== 功能配置 ====================
-    /** 是否显示代码块头部 */
     showCodeBlockHeader: {
       type: Boolean,
       default: true
     },
-    /** 代码块最大高度（超出后滚动） */
     codeMaxHeight: {
       type: String,
       default: undefined
+    },
+    enableAnimate: {
+      type: Boolean,
+      default: false
     }
   },
   setup(props) {
@@ -70,7 +67,7 @@ export default defineComponent({
           }
           return h(renderer, props);
         }
-        return h(CodeLine, props);
+        return h(CodeLine, { ...props, enableAnimate: props.enableAnimate });
       }
 
       const { language } = props.raw;
@@ -97,7 +94,8 @@ export default defineComponent({
         lightTheme: props.codeLightTheme,
         darkTheme: props.codeDarkTheme,
         showCodeBlockHeader: props.showCodeBlockHeader,
-        codeMaxHeight: props.codeMaxHeight
+        codeMaxHeight: props.codeMaxHeight,
+        enableAnimate: props.enableAnimate  // 传递动画开关
       }, props.codeXSlots);
     };
   }

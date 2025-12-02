@@ -36,7 +36,7 @@ export function rehypeAnimatedPlugin() {
               newChildren.push({
                 children: [{ type: 'text', value: word }],
                 properties: {
-                  className: 'x-markdown-animated-word'
+                  className: 'x-md-animated-word'
                 },
                 tagName: 'span',
                 type: 'element'
