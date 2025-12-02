@@ -29,20 +29,17 @@ export interface UseThemeReturn {
  * 支持 light/dark/auto 模式切换
  */
 export function useTheme(options: UseThemeOptions = {}): UseThemeReturn {
-  const {
-    lightTheme = themeMap.light,
-    darkTheme = themeMap.dark,
-  } = options
+  const { lightTheme = themeMap.light, darkTheme = themeMap.dark } = options
 
   // 内部 mode（用于 setMode/toggleMode 修改）
-  const internalMode = ref<ThemeMode>(
-    isRef(options.mode) ? options.mode.value : (options.mode || 'auto')
-  )
+  const internalMode = ref<ThemeMode>(isRef(options.mode) ? options.mode.value : options.mode || 'auto')
 
   // 实际使用的 mode（优先使用外部传入的响应式值）
   const mode = computed<ThemeMode>({
-    get: () => isRef(options.mode) ? options.mode.value : internalMode.value,
-    set: (val) => { internalMode.value = val }
+    get: () => (isRef(options.mode) ? options.mode.value : internalMode.value),
+    set: (val) => {
+      internalMode.value = val
+    },
   })
 
   // 系统是否为暗色模式

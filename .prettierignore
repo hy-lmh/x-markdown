@@ -1,0 +1,32 @@
+# 忽略构建产物
+dist/
+build/
+*.min.js
+*.min.css
+
+# 忽略依赖
+node_modules/
+.pnpm-store/
+
+# 忽略锁文件
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# 忽略自动生成的文件
+*.d.ts
+!src/**/*.d.ts
+coverage/
+
+# 忽略编辑器配置
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# 忽略日志
+*.log
+
+# 忽略缓存
+.turbo/
+.cache/

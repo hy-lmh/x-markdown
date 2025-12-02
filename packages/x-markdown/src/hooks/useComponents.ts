@@ -1,19 +1,19 @@
-import { h } from 'vue';
-import type { CodeXProps } from '../components/CodeX/types';
-import CodeX from '../components/CodeX/index.vue';
+import { h } from 'vue'
+import type { CodeXProps } from '../components/CodeX/types'
+import CodeX from '../components/CodeX/index.vue'
 
 // useComponents 的配置选项
 interface UseComponentsOptions {
   // 自定义代码块渲染函数
-  codeXRender?: Record<string, any>;
+  codeXRender?: Record<string, any>
   // 自定义代码块插槽
-  codeXSlots?: Record<string, any>;
+  codeXSlots?: Record<string, any>
   // 是否为深色模式
-  isDark?: boolean;
+  isDark?: boolean
   // 代码块配置
-  codeXProps?: CodeXProps;
+  codeXProps?: CodeXProps
   // 是否启用动画效果
-  enableAnimate?: boolean;
+  enableAnimate?: boolean
 }
 
 /**
@@ -24,22 +24,23 @@ interface UseComponentsOptions {
 function useComponents(props?: UseComponentsOptions) {
   const components = {
     // code 元素使用 CodeX 组件渲染
-    code: (raw: any) => h(CodeX, {
-      raw,
-      codeXRender: props?.codeXRender,
-      codeXSlots: props?.codeXSlots,
-      isDark: props?.isDark,
-      // 主题配置
-      codeLightTheme: props?.codeXProps?.codeLightTheme,
-      codeDarkTheme: props?.codeXProps?.codeDarkTheme,
-      // 功能配置
-      showCodeBlockHeader: props?.codeXProps?.showCodeBlockHeader,
-      codeMaxHeight: props?.codeXProps?.codeMaxHeight,
-      // 动画配置 - 传递 enableAnimate 参数
-      enableAnimate: props?.enableAnimate
-    })
-  };
-  return components;
+    code: (raw: any) =>
+      h(CodeX, {
+        raw,
+        codeXRender: props?.codeXRender,
+        codeXSlots: props?.codeXSlots,
+        isDark: props?.isDark,
+        // 主题配置
+        codeLightTheme: props?.codeXProps?.codeLightTheme,
+        codeDarkTheme: props?.codeXProps?.codeDarkTheme,
+        // 功能配置
+        showCodeBlockHeader: props?.codeXProps?.showCodeBlockHeader,
+        codeMaxHeight: props?.codeXProps?.codeMaxHeight,
+        // 动画配置 - 传递 enableAnimate 参数
+        enableAnimate: props?.enableAnimate,
+      }),
+  }
+  return components
 }
 
-export { useComponents };
+export { useComponents }

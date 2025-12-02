@@ -1,11 +1,11 @@
-import type { PropType } from 'vue';
-import type { PluggableList } from 'unified';
-import type { CodeXProps } from '../components/CodeX/types';
-import type { CustomAttrs, SanitizeOptions } from '../core/types';
-import { computed, defineComponent, h, toValue } from 'vue';
-import { VueMarkdown, VueMarkdownAsync } from '../core';
-import { useComponents, usePlugins, useProcessMarkdown } from '../hooks';
-import './index.css';
+import type { PropType } from 'vue'
+import type { PluggableList } from 'unified'
+import type { CodeXProps } from '../components/CodeX/types'
+import type { CustomAttrs, SanitizeOptions } from '../core/types'
+import { computed, defineComponent, h, toValue } from 'vue'
+import { VueMarkdown, VueMarkdownAsync } from '../core'
+import { useComponents, usePlugins, useProcessMarkdown } from '../hooks'
+import './index.css'
 // Markdown 渲染器 Props 定义
 const markdownRendererProps = {
   // markdown 字符串内容
@@ -25,8 +25,8 @@ const markdownRendererProps = {
     type: Object as PropType<CodeXProps>,
     default: () => ({
       codeLightTheme: 'vitesse-light',
-      codeDarkTheme: 'vitesse-dark'
-    })
+      codeDarkTheme: 'vitesse-dark',
+    }),
   },
   // 自定义代码块渲染函数
   codeXRender: { type: Object, default: () => ({}) },
@@ -47,8 +47,8 @@ const markdownRendererProps = {
   // 是否启用内容清洗
   sanitize: { type: Boolean, default: false },
   // 清洗选项
-  sanitizeOptions: { type: Object as PropType<SanitizeOptions>, default: () => ({}) }
-};
+  sanitizeOptions: { type: Object as PropType<SanitizeOptions>, default: () => ({}) },
+}
 
 /**
  * Markdown 渲染器组件 - 同步版本
@@ -59,24 +59,24 @@ const MarkdownRenderer = defineComponent({
   props: markdownRendererProps,
   setup(props, { slots, attrs }) {
     // 获取 remark/rehype 插件列表
-    const { rehypePlugins, remarkPlugins } = usePlugins(props);
+    const { rehypePlugins, remarkPlugins } = usePlugins(props)
     // 获取自定义组件映射
-    const components = useComponents(props);
+    const components = useComponents(props)
 
     // 处理 markdown 内容（LaTeX 预处理）
     const markdown = computed(() => {
       if (props.enableLatex) {
-        return useProcessMarkdown(props.markdown);
+        return useProcessMarkdown(props.markdown)
       } else {
-        return props.markdown;
+        return props.markdown
       }
-    });
+    })
 
     // 合并后的 codeXProps（带默认值）
     const mergedCodeXProps = computed(() => ({
       ...markdownRendererProps.codeXProps.default(),
-      ...props.codeXProps
-    }));
+      ...props.codeXProps,
+    }))
 
     // 最终渲染 props，只提取需要的属性避免循环引用
     const renderProps = computed(() => ({
@@ -93,28 +93,28 @@ const MarkdownRenderer = defineComponent({
       remarkPlugins: toValue(remarkPlugins),
       rehypeOptions: props.rehypeOptions,
       sanitize: props.sanitize,
-      sanitizeOptions: props.sanitizeOptions
-    }));
+      sanitizeOptions: props.sanitizeOptions,
+    }))
 
     return () =>
       h(
         'div',
         {
-          class: ['elx-xmarkdown-renderer', { 'is-dark': props.isDark }],
+          class: ['x-md-renderer', { 'is-dark': props.isDark }],
           style: {
             backgroundColor: props.isDark ? '#1e1e1e' : '#ffffff',
             color: props.isDark ? '#e5e5e5' : '#333333',
-            padding: '16px'
+            padding: '16px',
           },
-          ...attrs
+          ...attrs,
         },
         h(VueMarkdown, renderProps.value as any, {
           ...components,
-          ...slots
-        })
-      );
-  }
-});
+          ...slots,
+        }),
+      )
+  },
+})
 
 /**
  * Markdown 渲染器组件 - 异步版本
@@ -125,24 +125,24 @@ const MarkdownRendererAsync = defineComponent({
   props: markdownRendererProps,
   setup(props, { slots, attrs }) {
     // 获取 remark/rehype 插件列表
-    const { rehypePlugins, remarkPlugins } = usePlugins(props);
+    const { rehypePlugins, remarkPlugins } = usePlugins(props)
     // 获取自定义组件映射
-    const components = useComponents(props);
+    const components = useComponents(props)
 
     // 处理 markdown 内容（LaTeX 预处理）
     const markdown = computed(() => {
       if (props.enableLatex) {
-        return useProcessMarkdown(props.markdown);
+        return useProcessMarkdown(props.markdown)
       } else {
-        return props.markdown;
+        return props.markdown
       }
-    });
+    })
 
     // 合并后的 codeXProps（带默认值）
     const mergedCodeXProps = computed(() => ({
       ...markdownRendererProps.codeXProps.default(),
-      ...props.codeXProps
-    }));
+      ...props.codeXProps,
+    }))
 
     // 最终渲染 props，只提取需要的属性避免循环引用
     const renderProps = computed(() => ({
@@ -159,31 +159,27 @@ const MarkdownRendererAsync = defineComponent({
       remarkPlugins: toValue(remarkPlugins),
       rehypeOptions: props.rehypeOptions,
       sanitize: props.sanitize,
-      sanitizeOptions: props.sanitizeOptions
-    }));
+      sanitizeOptions: props.sanitizeOptions,
+    }))
 
     return () =>
       h(
         'div',
         {
-          class: ['elx-xmarkdown-renderer', { 'is-dark': props.isDark }],
+          class: ['x-md-renderer', { 'is-dark': props.isDark }],
           style: {
             backgroundColor: props.isDark ? '#1e1e1e' : '#ffffff',
             color: props.isDark ? '#e5e5e5' : '#333333',
-            padding: '16px'
+            padding: '16px',
           },
-          ...attrs
+          ...attrs,
         },
         h(VueMarkdownAsync, renderProps.value as any, {
           ...components,
-          ...slots
-        })
-      );
-  }
-});
+          ...slots,
+        }),
+      )
+  },
+})
 
-export {
-  MarkdownRenderer,
-  MarkdownRendererAsync,
-  markdownRendererProps
-};
+export { MarkdownRenderer, MarkdownRendererAsync, markdownRendererProps }

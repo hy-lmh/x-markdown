@@ -2,18 +2,36 @@
   <div class="x-md-code-block" :class="{ 'x-md-code-block--dark': props.isDark }">
     <!-- 头部：支持插槽自定义 -->
     <div v-if="showCodeBlockHeader" class="x-md-code-header">
-      <slot name="header" :language="language" :code="code" :copy="copy" :copied="copied" :collapsed="collapsed" :toggleCollapse="toggleCollapse">
+      <slot
+        name="header"
+        :language="language"
+        :code="code"
+        :copy="copy"
+        :copied="copied"
+        :collapsed="collapsed"
+        :toggleCollapse="toggleCollapse"
+      >
         <!-- 左侧：语言标识 + 折叠按钮 -->
         <div class="x-md-code-header__left">
           <slot name="header-left" :language="language" :collapsed="collapsed" :toggleCollapse="toggleCollapse">
             <!-- 折叠/展开图标 -->
-            <button 
-              class="x-md-collapse-btn" 
+            <button
+              class="x-md-collapse-btn"
               :class="{ 'x-md-collapse-btn--collapsed': collapsed }"
               @click="toggleCollapse"
               :title="collapsed ? '展开代码' : '折叠代码'"
             >
-              <svg class="x-md-collapse-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg
+                class="x-md-collapse-icon"
+                viewBox="0 0 24 24"
+                width="14"
+                height="14"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
                 <polyline points="6 9 12 15 18 9"></polyline>
               </svg>
             </button>
@@ -93,21 +111,21 @@ interface Props {
 
 // 定义组件 props 默认值
 const props = withDefaults(defineProps<Props>(), {
-  lightTheme: 'vitesse-light',  // 默认亮色主题
-  darkTheme: 'vitesse-dark',    // 默认暗色主题
-  isDark: false,                // 默认亮色模式
-  showCodeBlockHeader: true,    // 默认显示代码块头部
-  enableAnimate: false          // 默认不启用动画
+  lightTheme: 'vitesse-light', // 默认亮色主题
+  darkTheme: 'vitesse-dark', // 默认暗色主题
+  isDark: false, // 默认亮色模式
+  showCodeBlockHeader: true, // 默认显示代码块头部
+  enableAnimate: false, // 默认不启用动画
 })
 
 const code = computed(() => props.code.trim())
 const language = computed(() => props.language || 'text')
-const actualTheme = computed(() => props.isDark ? props.darkTheme : props.lightTheme)
+const actualTheme = computed(() => (props.isDark ? props.darkTheme : props.lightTheme))
 
 const { lines, preStyle } = useHighlight(code, {
   language,
   theme: actualTheme,
-  colorReplacements: props.colorReplacements
+  colorReplacements: props.colorReplacements,
 })
 
 // 颜色替换
@@ -122,7 +140,7 @@ const normalizeStyleKeys = (style: Record<string, string | number>): CSSProperti
   Object.entries(style).forEach(([key, value]) => {
     // font-style -> fontStyle
     const camelKey = key.replace(/-([a-z])/g, (_, char) => char.toUpperCase())
-      ; (normalized as Record<string, string | number>)[camelKey] = value
+    ;(normalized as Record<string, string | number>)[camelKey] = value
   })
   return normalized
 }
@@ -153,7 +171,7 @@ const showFallback = computed(() => !lines.value?.length)
 // 代码容器样式（合并 preStyle 和 codeMaxHeight）
 const codeContainerStyle = computed(() => ({
   ...preStyle.value,
-  maxHeight: props.codeMaxHeight
+  maxHeight: props.codeMaxHeight,
 }))
 </script>
 
@@ -304,7 +322,9 @@ const codeContainerStyle = computed(() => ({
 /* 代码块主体容器 */
 .x-md-code-body {
   overflow: hidden;
-  transition: max-height 0.3s ease, opacity 0.2s ease;
+  transition:
+    max-height 0.3s ease,
+    opacity 0.2s ease;
 }
 
 /* 折叠状态 */
@@ -312,5 +332,4 @@ const codeContainerStyle = computed(() => ({
   max-height: 0 !important;
   opacity: 0;
 }
-
 </style>

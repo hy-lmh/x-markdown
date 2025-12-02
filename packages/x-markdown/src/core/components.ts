@@ -1,119 +1,103 @@
-import type { Root } from 'hast';
-import type { Options as TRehypeOptions } from 'mdast-util-to-hast';
-import type { PluggableList } from 'unified';
-import type { PropType } from 'vue';
+import type { Root } from 'hast'
+import type { Options as TRehypeOptions } from 'mdast-util-to-hast'
+import type { PluggableList } from 'unified'
+import type { PropType } from 'vue'
 
-import type { CustomAttrs, SanitizeOptions, TVueMarkdown } from './types';
-import { defineComponent, shallowRef, toRefs, watch } from 'vue';
+import type { CustomAttrs, SanitizeOptions, TVueMarkdown } from './types'
+import { defineComponent, shallowRef, toRefs, watch } from 'vue'
 // import { useMarkdownContext } from '../components/MarkdownProvider';
-import { render } from './hast-to-vnode';
-import { useMarkdownProcessor } from './useProcessor';
+import { render } from './hast-to-vnode'
+import { useMarkdownProcessor } from './useProcessor'
 
-export type { CustomAttrs, SanitizeOptions, TVueMarkdown };
+export type { CustomAttrs, SanitizeOptions, TVueMarkdown }
 
 const sharedProps = {
   markdown: {
     type: String as PropType<string>,
-    default: ''
+    default: '',
   },
   customAttrs: {
     type: Object as PropType<CustomAttrs>,
-    default: () => ({})
+    default: () => ({}),
   },
   remarkPlugins: {
     type: Array as PropType<PluggableList>,
-    default: () => []
+    default: () => [],
   },
   rehypePlugins: {
     type: Array as PropType<PluggableList>,
-    default: () => []
+    default: () => [],
   },
   rehypeOptions: {
     type: Object as PropType<Omit<TRehypeOptions, 'file'>>,
-    default: () => ({})
+    default: () => ({}),
   },
   sanitize: {
     type: Boolean,
-    default: false
+    default: false,
   },
   sanitizeOptions: {
     type: Object as PropType<SanitizeOptions>,
-    default: () => ({})
-  }
-};
+    default: () => ({}),
+  },
+}
 const vueMarkdownImpl = defineComponent({
   name: 'VueMarkdown',
   props: sharedProps,
   setup(props, { slots, attrs }) {
-    const {
-      markdown,
-      remarkPlugins,
-      rehypePlugins,
-      rehypeOptions,
-      sanitize,
-      sanitizeOptions,
-      customAttrs
-    } = toRefs(props);
+    const { markdown, remarkPlugins, rehypePlugins, rehypeOptions, sanitize, sanitizeOptions, customAttrs } =
+      toRefs(props)
 
     const { processor } = useMarkdownProcessor({
       remarkPlugins,
       rehypePlugins,
       rehypeOptions,
       sanitize,
-      sanitizeOptions
-    });
+      sanitizeOptions,
+    })
 
     return () => {
-      const mdast = processor.value.parse(markdown.value);
-      const hast = processor.value.runSync(mdast) as Root;
-      return render(hast, attrs, slots, customAttrs.value);
-    };
-  }
-});
+      const mdast = processor.value.parse(markdown.value)
+      const hast = processor.value.runSync(mdast) as Root
+      return render(hast, attrs, slots, customAttrs.value)
+    }
+  },
+})
 
 const vueMarkdownAsyncImpl = defineComponent({
   name: 'VueMarkdownAsync',
   props: sharedProps,
   async setup(props, { slots, attrs }) {
-    const {
-      markdown,
-      remarkPlugins,
-      rehypePlugins,
-      rehypeOptions,
-      sanitize,
-      sanitizeOptions,
-      customAttrs
-    } = toRefs(props);
+    const { markdown, remarkPlugins, rehypePlugins, rehypeOptions, sanitize, sanitizeOptions, customAttrs } =
+      toRefs(props)
     const { processor } = useMarkdownProcessor({
       remarkPlugins,
       rehypePlugins,
       rehypeOptions,
       sanitize,
-      sanitizeOptions
-    });
+      sanitizeOptions,
+    })
 
-    const hast = shallowRef<Root | null>(null);
+    const hast = shallowRef<Root | null>(null)
     const process = async (): Promise<void> => {
-      const mdast = processor.value.parse(markdown.value);
-      hast.value = (await processor.value.run(mdast)) as Root;
-    };
+      const mdast = processor.value.parse(markdown.value)
+      hast.value = (await processor.value.run(mdast)) as Root
+    }
 
-    watch(() => [markdown.value, processor.value], process, { flush: 'sync' });
+    watch(() => [markdown.value, processor.value], process, { flush: 'sync' })
 
-    await process();
+    await process()
 
     return () => {
-      return hast.value
-        ? render(hast.value, attrs, slots, customAttrs.value)
-        : null;
-    };
-  }
-});
+      return hast.value ? render(hast.value, attrs, slots, customAttrs.value) : null
+    }
+  },
+})
 
 // export the public type for h/tsx inference
 // also to avoid inline import() in generated d.ts files
-export const VueMarkdown: TVueMarkdown = vueMarkdownImpl as any;
+export const VueMarkdown: TVueMarkdown = vueMarkdownImpl as any
 
 // export the public type for h/tsx inference
 // also to avoid inline import() in generated d.ts files
-export const VueMarkdownAsync: TVueMarkdown = vueMarkdownAsyncImpl as any;
+export const VueMarkdownAsync: TVueMarkdown = vueMarkdownAsyncImpl as any

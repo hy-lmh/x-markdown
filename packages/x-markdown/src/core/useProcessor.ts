@@ -1,27 +1,25 @@
-import type { Root } from 'hast';
-import type { Root as MdastRoot } from 'mdast';
-import type { Options as TRehypeOptions } from 'mdast-util-to-hast';
-import type { PluggableList, Processor } from 'unified';
-import type { ComputedRef, MaybeRefOrGetter } from 'vue';
-import type { SanitizeOptions } from './types';
-import deepmerge from 'deepmerge';
-import rehypeSanitize, { defaultSchema } from 'rehype-sanitize';
-import remarkParse from 'remark-parse';
-import remarkRehype from 'remark-rehype';
-import { unified } from 'unified';
-import { computed, toValue } from 'vue';
+import type { Root } from 'hast'
+import type { Root as MdastRoot } from 'mdast'
+import type { Options as TRehypeOptions } from 'mdast-util-to-hast'
+import type { PluggableList, Processor } from 'unified'
+import type { ComputedRef, MaybeRefOrGetter } from 'vue'
+import type { SanitizeOptions } from './types'
+import deepmerge from 'deepmerge'
+import rehypeSanitize, { defaultSchema } from 'rehype-sanitize'
+import remarkParse from 'remark-parse'
+import remarkRehype from 'remark-rehype'
+import { unified } from 'unified'
+import { computed, toValue } from 'vue'
 
 export interface TUseMarkdownProcessorOptions {
-  remarkPlugins?: MaybeRefOrGetter<PluggableList>;
-  rehypePlugins?: MaybeRefOrGetter<PluggableList>;
-  rehypeOptions?: MaybeRefOrGetter<Omit<TRehypeOptions, 'file'>>;
-  sanitize?: MaybeRefOrGetter<boolean>;
-  sanitizeOptions?: MaybeRefOrGetter<SanitizeOptions>;
+  remarkPlugins?: MaybeRefOrGetter<PluggableList>
+  rehypePlugins?: MaybeRefOrGetter<PluggableList>
+  rehypeOptions?: MaybeRefOrGetter<Omit<TRehypeOptions, 'file'>>
+  sanitize?: MaybeRefOrGetter<boolean>
+  sanitizeOptions?: MaybeRefOrGetter<SanitizeOptions>
 }
 export function useMarkdownProcessor(options?: TUseMarkdownProcessorOptions): {
-  processor: ComputedRef<
-    Processor<MdastRoot, MdastRoot, Root, undefined, undefined>
-  >;
+  processor: ComputedRef<Processor<MdastRoot, MdastRoot, Root, undefined, undefined>>
 } {
   const processor = computed(() => {
     return createProcessor({
@@ -29,25 +27,25 @@ export function useMarkdownProcessor(options?: TUseMarkdownProcessorOptions): {
       rehypePlugins: toValue(options?.rehypePlugins),
       rehypeOptions: toValue(options?.rehypeOptions),
       sanitize: toValue(options?.sanitize),
-      sanitizeOptions: toValue(options?.sanitizeOptions)
-    });
-  });
-  return { processor };
+      sanitizeOptions: toValue(options?.sanitizeOptions),
+    })
+  })
+  return { processor }
 }
 
 export function createProcessor(options?: {
-  prePlugins?: PluggableList;
-  rehypePlugins?: PluggableList;
-  rehypeOptions?: Omit<TRehypeOptions, 'file'>;
-  sanitize?: boolean;
-  sanitizeOptions?: SanitizeOptions;
+  prePlugins?: PluggableList
+  rehypePlugins?: PluggableList
+  rehypeOptions?: Omit<TRehypeOptions, 'file'>
+  sanitize?: boolean
+  sanitizeOptions?: SanitizeOptions
   // TODO: fix types
 }): Processor<any, any, any, any, any> {
   return unified()
     .use(options?.prePlugins ?? [])
     .use(remarkRehype, {
       allowDangerousHtml: true,
-      ...(options?.rehypeOptions || {})
+      ...(options?.rehypeOptions || {}),
     })
     .use(options?.rehypePlugins ?? [])
     .use(
@@ -58,10 +56,10 @@ export function createProcessor(options?: {
               deepmerge(
                 defaultSchema,
                 options?.sanitizeOptions?.sanitizeOptions || {},
-                options?.sanitizeOptions?.mergeOptions || {}
-              )
-            ]
+                options?.sanitizeOptions?.mergeOptions || {},
+              ),
+            ],
           ]
-        : []
-    );
+        : [],
+    )
 }

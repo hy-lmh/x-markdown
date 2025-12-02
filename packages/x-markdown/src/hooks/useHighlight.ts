@@ -5,16 +5,16 @@ import type { getSingletonHighlighter } from 'shiki'
 
 // 流式高亮结果接口
 interface StreamingHighlightResult {
-  colorReplacements?: Record<string, string>  // 颜色替换映射
-  lines: ThemedToken[][]                       // 按行分组的 token
-  preStyle?: CSSProperties                     // pre 元素的样式
+  colorReplacements?: Record<string, string> // 颜色替换映射
+  lines: ThemedToken[][] // 按行分组的 token
+  preStyle?: CSSProperties // pre 元素的样式
 }
 
 // useHighlight 配置选项接口
 interface UseHighlightOptions {
-  language: MaybeRef<string>                   // 语言（支持响应式）
-  theme?: BuiltinTheme | Ref<BuiltinTheme>     // 主题（支持响应式）
-  colorReplacements?: Record<string, string>   // 颜色替换映射
+  language: MaybeRef<string> // 语言（支持响应式）
+  theme?: BuiltinTheme | Ref<BuiltinTheme> // 主题（支持响应式）
+  colorReplacements?: Record<string, string> // 颜色替换映射
 }
 
 let shikiModulePromise: Promise<typeof import('shiki') | null> | null = null
@@ -76,10 +76,7 @@ const createPreStyle = (bg?: string, fg?: string): CSSProperties | undefined => 
   }
 }
 
-export function useHighlight(
-  text: Ref<string>,
-  options: UseHighlightOptions
-) {
+export function useHighlight(text: Ref<string>, options: UseHighlightOptions) {
   // 流式高亮结果
   const streaming = ref<StreamingHighlightResult>()
   // 加载状态
@@ -233,7 +230,7 @@ export function useHighlight(
     () => [effectiveLanguage.value, effectiveTheme.value],
     async ([newLang]) => {
       const requestedLang = newLang as string
-      
+
       // 如果语言变化了，且当前使用的是 plaintext（fallback），尝试重新加载新语言
       if (
         highlighter &&
@@ -253,10 +250,10 @@ export function useHighlight(
           return
         }
       }
-      
+
       initHighlighter()
     },
-    { immediate: true }
+    { immediate: true },
   )
 
   // 监听文本变化，增量更新高亮
@@ -280,7 +277,7 @@ export function useHighlight(
         lastRequestedLang = requestedLang
       }
     }
-    
+
     if (tokenizer) {
       updateTokens(newText)
     }

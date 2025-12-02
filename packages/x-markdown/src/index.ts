@@ -1,2 +1,2 @@
-export * from './core';
-export * from './MarkdownRender';
+export * from './core'
+export * from './MarkdownRender'
