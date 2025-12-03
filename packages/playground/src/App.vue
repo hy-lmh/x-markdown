@@ -120,12 +120,12 @@
             <template #self-btn>
               <button>点击button</button>
             </template>
-             <template #tip>
+            <template #tip>
               <div class="tip">角标</div>
             </template>
             <!-- 自定义链接：添加外链图标 -->
-            <template v-if="useCustomSlots" #a="{ node, children }">
-              <a :href="node?.properties?.href" target="_blank" rel="noopener noreferrer" class="custom-link">
+            <template v-if="useCustomSlots" #a="{ children, ...props }">
+              <a :href="props?.href" target="_blank" rel="noopener noreferrer" class="custom-link">
                 <component :is="children" />
                 <span class="link-icon">↗</span>
               </a>
@@ -1043,7 +1043,7 @@ body {
     min-height: 500px;
   }
 }
-.tip{
+.tip {
   display: inline-block;
   background: #fffae5;
   color: #b45309;

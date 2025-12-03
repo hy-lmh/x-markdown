@@ -50,7 +50,6 @@ export function renderChildren(
             return targetSlot({
               ...vnodeProps,
               ...attrs,
-              node,
               children: () => renderChildren(node.children, context, node, slots, customAttrs),
             })
           }
