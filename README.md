@@ -10,7 +10,10 @@
 [![NPM downloads](https://img.shields.io/npm/dm/x-markdown-vue.svg)](https://www.npmjs.com/package/x-markdown-vue)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Vue](https://img.shields.io/badge/vue-3.x-brightgreen.svg)](https://vuejs.org/)
+
+<div align="center">
 [在线演示](https://x-markdown.netlify.app/) · [报告问题](https://github.com/element-plus-x/x-markdown/issues) · [功能请求](https://github.com/element-plus-x/x-markdown/issues/new)
+</div>
 
 </div>
 
