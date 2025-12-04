@@ -6,8 +6,8 @@
 
 支持流式渲染、代码高亮、LaTeX 数学公式、Mermaid 图表等特性
 
-[![NPM version](https://img.shields.io/npm/v/x-markdown.svg)](https://www.npmjs.com/package/x-markdown)
-[![NPM downloads](https://img.shields.io/npm/dm/x-markdown.svg)](https://www.npmjs.com/package/x-markdown)
+[![NPM version](https://img.shields.io/npm/v/x-markdown-vue.svg)](https://www.npmjs.com/package/x-markdown-vue)
+[![NPM downloads](https://img.shields.io/npm/dm/x-markdown-vue.svg)](https://www.npmjs.com/package/x-markdown-vue)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Vue](https://img.shields.io/badge/vue-3.x-brightgreen.svg)](https://vuejs.org/)
 [在线演示](https://x-markdown.netlify.app/) · [报告问题](https://github.com/element-plus-x/x-markdown/issues) · [功能请求](https://github.com/element-plus-x/x-markdown/issues/new)
@@ -52,13 +52,13 @@
 
 ```bash
 # pnpm (推荐)
-pnpm add x-markdown
+pnpm add x-markdown-vue
 
 # npm
-npm install x-markdown
+npm install x-markdown-vue
 
 # yarn
-yarn add x-markdown
+yarn add x-markdown-vue
 ```
 
 ### 依赖项
@@ -86,8 +86,8 @@ import 'katex/dist/katex.min.css'
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { MarkdownRenderer } from 'x-markdown'
-import 'x-markdown/style'
+import { MarkdownRenderer } from 'x-markdown-vue'
+import 'x-markdown-vue/style'
 
 const content = ref(`
 # Hello World
@@ -113,8 +113,8 @@ This is a **markdown** renderer.
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { MarkdownRendererAsync } from 'x-markdown'
-import 'x-markdown/style'
+import { MarkdownRendererAsync } from 'x-markdown-vue'
+import 'x-markdown-vue/style'
 
 const content = ref('# Large Document\n...')
 </script>

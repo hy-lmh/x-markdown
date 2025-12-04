@@ -138,7 +138,7 @@
 import 'katex/dist/katex.min.css'
 import 'github-markdown-css/github-markdown.css'
 import { ref, computed, onUnmounted, watch, h } from 'vue'
-import { MarkdownRenderer } from 'x-markdown'
+import { MarkdownRenderer } from 'x-markdown-vue'
 
 // ==================== 状态管理 ====================
 
