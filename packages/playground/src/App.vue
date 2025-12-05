@@ -25,8 +25,8 @@
       <div class="config-section example-section">
         <div class="config-title">📚 示例选择</div>
         <div class="config-content example-tabs">
-          <button 
-            v-for="example in exampleList" 
+          <button
+            v-for="example in exampleList"
             :key="example.value"
             :class="['example-tab', { active: currentExample === example.value }]"
             @click="switchExample(example.value)"
@@ -83,8 +83,9 @@
           <span class="speed-value">{{ streamSpeed }}ms</span>
           <div class="progress-bar">
             <div class="progress-fill" :style="{ width: streamProgress + '%' }"></div>
-            <span class="progress-text" :class="{ 'on-fill': streamProgress > 50 }">{{ streamProgress.toFixed(1)
-              }}%</span>
+            <span class="progress-text" :class="{ 'on-fill': streamProgress > 50 }"
+              >{{ streamProgress.toFixed(1) }}%</span
+            >
           </div>
         </div>
       </div>
@@ -139,11 +140,15 @@ import 'katex/dist/katex.min.css'
 import 'github-markdown-css/github-markdown.css'
 import { ref, computed, onUnmounted, watch, h } from 'vue'
 import { MarkdownRenderer } from 'x-markdown-vue'
+import type * as echarts from 'echarts'
 
 // ==================== 状态管理 ====================
 
 // 主题状态
 const isDark = ref(false)
+
+// ECharts 实例管理 - 存储所有 ECharts 图表实例
+const echartsInstances = new Map<string, echarts.ECharts>()
 
 // 示例选择
 type ExampleType = 'basic' | 'code' | 'mermaid' | 'formula'
@@ -404,7 +409,7 @@ func main() {
 \`\`\`sql
 -- SQL 示例 - 复杂查询
 WITH monthly_sales AS (
-    SELECT 
+    SELECT
         DATE_TRUNC('month', order_date) AS month,
         product_id,
         SUM(quantity) AS total_quantity,
@@ -413,7 +418,7 @@ WITH monthly_sales AS (
     WHERE order_date >= '2024-01-01'
     GROUP BY DATE_TRUNC('month', order_date), product_id
 )
-SELECT 
+SELECT
     p.name AS product_name,
     ms.month,
     ms.total_quantity,
@@ -508,7 +513,14 @@ echo "✅ Deployment completed!"
   },
   "legend": {
     "data": ["Vue", "React", "Angular"],
-    "top": "30"
+    "top": "45"
+  },
+  "grid":  {
+    "top": "20%",
+    "bottom": "0%",
+    "left": "5%",
+    "right": "5%",
+    "containLabel": true
   },
   "xAxis": {
     "type": "category",
@@ -536,6 +548,73 @@ echo "✅ Deployment completed!"
       "type": "line",
       "smooth": true,
       "data": [30, 28, 25, 22, 20]
+    }
+  ]
+}
+\`\`\`
+## JSON 2
+
+\`\`\`json
+{
+  "features": {
+    "streaming": true,
+    "codeHighlight": true,
+    "latex": true,
+    "mermaid": true
+  }
+}
+\`\`\`
+
+## ECharts 图表2 (自定义渲染)
+
+通过 \`codeXRender\` 自定义渲染器，可以将 ECharts 配置直接渲染为交互式图表：
+
+\`\`\`echarts
+{
+  "title": {
+    "text": "技术栈使用趋势",
+    "left": "center"
+  },
+  "tooltip": {
+    "trigger": "axis"
+  },
+  "legend": {
+    "data": ["Vue", "React", "Angular"],
+    "top": "45"
+  },
+  "grid":  {
+    "top": "20%",
+    "bottom": "0%",
+    "left": "5%",
+    "right": "5%",
+    "containLabel": true
+  },
+  "xAxis": {
+    "type": "category",
+    "data": ["2020", "2021"]
+  },
+  "yAxis": {
+    "type": "value",
+    "name": "使用率 (%)"
+  },
+  "series": [
+    {
+      "name": "Vue",
+      "type": "line",
+      "smooth": true,
+      "data": [35, 42]
+    },
+    {
+      "name": "React",
+      "type": "line",
+      "smooth": true,
+      "data": [45, 50]
+    },
+    {
+      "name": "Angular",
+      "type": "line",
+      "smooth": true,
+      "data": [30, 28]
     }
   ]
 }
@@ -887,6 +966,16 @@ watch(streamSpeed, (newSpeed) => {
   }
 })
 
+// 监听主题变化，动态切换 ECharts 图表主题
+watch(isDark, (newIsDark) => {
+  // 遍历所有 ECharts 实例，调用 setTheme 方法切换主题
+  echartsInstances.forEach((chart) => {
+    // ECharts 6.0+ 支持动态主题切换
+    // 使用 setTheme 方法可以无需重新初始化即可切换主题
+    chart.setTheme(newIsDark ? 'dark' : 'default')
+  })
+})
+
 // ==================== Actions 配置 ====================
 
 // 代码块操作按钮
@@ -921,38 +1010,149 @@ const mermaidActions = [
 const codeXRender = {
   // 自定义 JSON 渲染：显示格式化的 JSON
   json: (props: any) => {
+    // 使用从 x-markdown 传递的唯一 key
+    const blockId = props.raw.key
+
     try {
       const formatted = JSON.stringify(JSON.parse(props.raw.content), null, 2)
-      return h('pre', {
-        style: {
-          background: isDark.value ? '#1e1e1e' : '#f5f5f5',
-          padding: '16px',
-          borderRadius: '8px',
-          overflow: 'auto',
-          margin: '0',
+      return h(
+        'pre',
+        {
+          key: `${blockId}-json-success`,
+          style: {
+            background: isDark.value ? '#1e1e1e' : '#f5f5f5',
+            padding: '16px',
+            borderRadius: '8px',
+            overflow: 'auto',
+            margin: '0',
+          },
         },
-      }, [
-        h('code', { style: { color: isDark.value ? '#9cdcfe' : '#0451a5' } }, formatted),
-      ])
+        [h('code', { style: { color: isDark.value ? '#9cdcfe' : '#0451a5' } }, formatted)],
+      )
     } catch {
-      return null // 解析失败时使用默认渲染
+      // 检查是否可能是流式输出中（内容不完整）
+      const content = props.raw.content.trim()
+      const isLikelyStreaming = !content.endsWith('}') || content.split('{').length !== content.split('}').length
+
+      if (isLikelyStreaming) {
+        // 流式输出中，显示加载状态
+        return h(
+          'div',
+          {
+            key: `${blockId}-json-loading`, // 使用唯一但稳定的 key
+            style: {
+              background: isDark.value ? '#1e1e1e' : '#f9fafb',
+              padding: '24px',
+              borderRadius: '8px',
+              border: `1px solid ${isDark.value ? '#333' : '#e5e7eb'}`,
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              margin: '0',
+            },
+          },
+          [
+            h('div', {
+              style: {
+                width: '24px',
+                height: '24px',
+                border: `2px solid ${isDark.value ? '#333' : '#e5e7eb'}`,
+                borderTop: '2px solid #42b883',
+                borderRadius: '50%',
+                animation: 'spin 1s linear infinite',
+                flexShrink: '0',
+              },
+            }),
+            h(
+              'div',
+              {
+                style: {
+                  color: isDark.value ? '#9ca3af' : '#6b7280',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                },
+              },
+              '正在加载 JSON 数据...',
+            ),
+          ],
+        )
+      }
+
+      return null
     }
   },
   // 自定义 ECharts 渲染：解析配置并渲染图表
   echarts: (props: any) => {
+    // 使用从 x-markdown 传递的唯一 key
+    const blockId = props.raw.key
+    const content = props.raw.content.trim()
+
+    // 先检查内容是否完整
+    const looksComplete = content.endsWith('}') && content.split('{').length === content.split('}').length
+
+    // 内容不完整，显示 loading，不尝试解析
+    if (!looksComplete) {
+      return h(
+        'div',
+        {
+          key: `${blockId}-echarts-loading`, // 使用唯一但稳定的 key
+          style: {
+            width: '99%',
+            height: '400px',
+            background: isDark.value ? '#1e1e1e' : '#f9fafb',
+            borderRadius: '8px',
+            border: `1px solid ${isDark.value ? '#333' : '#e5e7eb'}`,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '12px',
+          },
+        },
+        [
+          h('div', {
+            style: {
+              width: '40px',
+              height: '40px',
+              border: `3px solid ${isDark.value ? '#333' : '#e5e7eb'}`,
+              borderTop: '3px solid #42b883',
+              borderRadius: '50%',
+              animation: 'spin 1s linear infinite',
+            },
+          }),
+          h(
+            'div',
+            {
+              style: {
+                color: isDark.value ? '#9ca3af' : '#6b7280',
+                fontSize: '14px',
+                fontWeight: '500',
+              },
+            },
+            '正在加载 ECharts 图表...',
+          ),
+        ],
+      )
+    }
+
+    // 内容完整，尝试解析并渲染
     try {
-      const config = JSON.parse(props.raw.content)
-      // 生成唯一 ID
-      const chartId = `echarts-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`
+      const config = JSON.parse(content)
+      // 生成唯一 DOM ID
+      const chartId = `${blockId}-echarts-dom`
       // 返回一个容器，并在 mounted 后初始化 ECharts
       return h('div', {
+        key: `${blockId}-echarts-chart`, // 使用唯一的 key，与 loading 区分
         id: chartId,
         style: {
-          width: '100%',
+          width: '99%',
           height: '400px',
           background: isDark.value ? '#1e1e1e' : '#ffffff',
           borderRadius: '8px',
           border: `1px solid ${isDark.value ? '#333' : '#e5e7eb'}`,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
         },
         // 使用 Vue 的 onMounted 钩子在元素挂载后初始化 ECharts
         onVnodeMounted: async (vnode: any) => {
@@ -962,12 +1162,18 @@ const codeXRender = {
           if (chartDom) {
             const chart = echarts.init(chartDom, isDark.value ? 'dark' : undefined)
             chart.setOption(config)
+
+            // 将图表实例存储到 Map 中，以便后续主题切换时使用
+            echartsInstances.set(chartId, chart)
+
             // 监听窗口大小变化，自适应图表
             const resizeHandler = () => chart.resize()
             window.addEventListener('resize', resizeHandler)
+
             // 存储清理函数
             ;(chartDom as any).__echarts_cleanup__ = () => {
               window.removeEventListener('resize', resizeHandler)
+              echartsInstances.delete(chartId) // 从 Map 中移除实例
               chart.dispose()
             }
           }
@@ -975,21 +1181,26 @@ const codeXRender = {
         onVnodeUnmounted: (vnode: any) => {
           const chartDom = vnode.el as HTMLElement
           if (chartDom && (chartDom as any).__echarts_cleanup__) {
-            (chartDom as any).__echarts_cleanup__()
+            ;(chartDom as any).__echarts_cleanup__()
           }
         },
       })
     } catch (e) {
-      // 解析失败时显示错误提示
-      return h('div', {
-        style: {
-          padding: '16px',
-          background: '#fef2f2',
-          color: '#dc2626',
-          borderRadius: '8px',
-          border: '1px solid #fecaca',
+      // 解析失败，显示错误提示
+      return h(
+        'div',
+        {
+          key: `${blockId}-echarts-error`, // 使用唯一的 key
+          style: {
+            padding: '16px',
+            background: '#fef2f2',
+            color: '#dc2626',
+            borderRadius: '8px',
+            border: '1px solid #fecaca',
+          },
         },
-      }, `ECharts 配置解析失败: ${e}`)
+        `ECharts 配置解析失败: ${e}`,
+      )
     }
   },
 }
@@ -1045,6 +1256,16 @@ onUnmounted(() => {
 <style>
 body {
   margin: 0 !important;
+}
+
+/* Loading 旋转动画 */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* 滚动条样式 - Webkit 浏览器 (Chrome, Edge, Safari) */

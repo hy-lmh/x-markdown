@@ -10,6 +10,7 @@ export function render(
   slots?: Slots,
   customAttrs?: MaybeRefOrGetter<CustomAttrs>,
 ): VNode {
+  const keyCounter: { [key: string]: number } = {}
   return h(
     'div',
     attrs,
@@ -19,6 +20,7 @@ export function render(
       hast,
       slots ?? {},
       toValue(customAttrs) ?? {},
+      keyCounter,
     ),
   )
 }
@@ -29,11 +31,8 @@ export function renderChildren(
   parent: Element | Root,
   slots: Slots,
   customAttrs: CustomAttrs,
+  keyCounter: { [key: string]: number },
 ): VNodeArrayChildren {
-  const keyCounter: {
-    [key: string]: number
-  } = {}
-
   return nodeList.map((node) => {
     switch (node.type) {
       case 'text':
@@ -41,7 +40,7 @@ export function renderChildren(
       case 'raw':
         return node.value
       case 'root':
-        return renderChildren(node.children, ctx, parent, slots, customAttrs)
+        return renderChildren(node.children, ctx, parent, slots, customAttrs, keyCounter)
       case 'element': {
         const { attrs, context, aliasList, vnodeProps } = getVNodeInfos(node, parent, ctx, keyCounter, customAttrs)
         for (let i = aliasList.length - 1; i >= 0; i--) {
@@ -50,12 +49,12 @@ export function renderChildren(
             return targetSlot({
               ...vnodeProps,
               ...attrs,
-              children: () => renderChildren(node.children, context, node, slots, customAttrs),
+              children: () => renderChildren(node.children, context, node, slots, customAttrs, keyCounter),
             })
           }
         }
 
-        return h(node.tagName, attrs, renderChildren(node.children, context, node, slots, customAttrs))
+        return h(node.tagName, attrs, renderChildren(node.children, context, node, slots, customAttrs, keyCounter))
       }
       default:
         return null

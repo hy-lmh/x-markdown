@@ -1,6 +1,14 @@
 {
     "cSpell.words": [
+        "echarts",
+        "functools",
+        "Gantt",
         "infty",
-        "katex"
+        "katex",
+        "kwargs",
+        "pipefail",
+        "pmatrix",
+        "vmatrix",
+        "vnode"
     ]
 }
