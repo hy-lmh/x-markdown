@@ -50,6 +50,13 @@
     - [代码高亮](#代码高亮)
     - [LaTeX 数学公式](#latex-数学公式)
     - [Mermaid 图表](#mermaid-图表)
+  - [流程图 (Flowchart)](#流程图-flowchart)
+  - [时序图 (Sequence Diagram)](#时序图-sequence-diagram)
+  - [甘特图 (Gantt Chart)](#甘特图-gantt-chart)
+  - [类图 (Class Diagram)](#类图-class-diagram)
+  - [状态图 (State Diagram)](#状态图-state-diagram)
+  - [饼图 (Pie Chart)](#饼图-pie-chart)
+  - [ER 图 (Entity Relationship)](#er-图-entity-relationship)
     - [完整的配置示例](#完整的配置示例)
     - [表格](#表格)
     - [任务列表](#任务列表)
@@ -161,9 +168,11 @@ const content = ref('# Large Document\n...')
 | `enableAnimate` | `boolean` | `false` | 是否启用流式动画效果 |
 | `enableBreaks` | `boolean` | `true` | 是否将换行符转换为 `<br>` |
 | `isDark` | `boolean` | `false` | 是否为深色模式 |
-| `codeXProps` | `CodeXProps` | `{}` | 代码块配置选项 |
+| `showCodeBlockHeader` | `boolean` | `true` | 是否显示代码块头部 |
+| `codeMaxHeight` | `string` | `undefined` | 代码块最大高度，如 '300px' |
+| `codeBlockActions` | `CodeBlockAction[]` | `[]` | 代码块自定义操作按钮 |
+| `mermaidActions` | `MermaidAction[]` | `[]` | Mermaid 图表自定义操作按钮 |
 | `codeXRender` | `object` | `{}` | 自定义代码块渲染函数 |
-| `codeXSlots` | `object` | `{}` | 自定义代码块插槽 |
 | `customAttrs` | `CustomAttrs` | `{}` | 自定义属性对象 |
 | `remarkPlugins` | `PluggableList` | `[]` | remark 插件列表 |
 | `rehypePlugins` | `PluggableList` | `[]` | rehype 插件列表 |
@@ -181,6 +190,22 @@ interface CodeXProps {
   enableAnimate?: boolean        // 是否启用代码块动画
   codeBlockActions?: CodeBlockAction[]  // 代码块自定义操作按钮
   mermaidActions?: MermaidAction[]  // Mermaid 图表自定义操作按钮
+}
+
+interface CodeBlockAction {
+  key: string                    // 唯一标识符
+  title: string                  // 按钮标题
+  icon: string                   // 按钮图标（SVG 或文本）
+  onClick: (props: any) => void  // 点击回调函数
+  show?: (props: any) => boolean // 条件显示函数（可选）
+}
+
+interface MermaidAction {
+  key: string                    // 唯一标识符
+  title: string                  // 按钮标题
+  icon: string                   // 按钮图标（SVG 或文本）
+  onClick: (props: any) => void  // 点击回调函数
+  show?: (props: any) => boolean // 条件显示函数（可选）
 }
 ```
 
@@ -447,24 +472,143 @@ $$
 
 ### Mermaid 图表
 
-支持流程图、时序图、甘特图等多种图表类型：
+X-Markdown 支持完整的 Mermaid 图表渲染，包括流程图、时序图、甘特图、类图、状态图、饼图、ER 图等多种图表类型，并提供丰富的交互功能。
 
-```ts
-interface MermaidSlotProps {
-  showSourceCode: boolean    // 是否显示源代码
-  svg: string                // 渲染的 SVG 内容
-  rawContent: string         // 原始 Mermaid 代码
-  isLoading: boolean         // 加载状态
-  copied: boolean            // 复制状态
-  zoomIn: () => void         // 放大函数
-  zoomOut: () => void        // 缩小函数
-  reset: () => void          // 重置函数
-  fullscreen: () => void     // 全屏函数
-  toggleCode: () => void     // 切换代码显示函数
-  copyCode: () => Promise<void>  // 复制代码函数
-  download: () => void       // 下载函数
-  raw: any                   // 原始数据
-}
+## 流程图 (Flowchart)
+
+```mermaid
+graph TB
+    A[开始] --> B{是否登录?}
+    B -->|是| C[进入首页]
+    B -->|否| D[跳转登录页]
+    D --> E[输入账号密码]
+    E --> F{验证通过?}
+    F -->|是| C
+    F -->|否| G[显示错误]
+    G --> E
+    C --> H[结束]
+```
+
+## 时序图 (Sequence Diagram)
+
+```mermaid
+sequenceDiagram
+    participant U as 用户
+    participant C as 客户端
+    participant S as 服务器
+    participant D as 数据库
+
+    U->>C: 点击登录
+    C->>S: POST /api/login
+    S->>D: 查询用户信息
+    D-->>S: 返回用户数据
+    S-->>C: 返回 JWT Token
+    C-->>U: 登录成功，跳转首页
+```
+
+## 甘特图 (Gantt Chart)
+
+```mermaid
+gantt
+    title 项目开发计划
+    dateFormat  YYYY-MM-DD
+    section 需求分析
+    需求调研           :a1, 2024-01-01, 7d
+    需求文档           :after a1, 5d
+    section 设计阶段
+    UI 设计            :2024-01-10, 10d
+    架构设计           :2024-01-12, 8d
+    section 开发阶段
+    前端开发           :2024-01-20, 20d
+    后端开发           :2024-01-20, 25d
+    section 测试上线
+    集成测试           :2024-02-15, 10d
+    上线部署           :2024-02-25, 3d
+```
+
+## 类图 (Class Diagram)
+
+```mermaid
+classDiagram
+    class Animal {
+        +String name
+        +int age
+        +makeSound()
+    }
+    class Dog {
+        +String breed
+        +bark()
+        +fetch()
+    }
+    class Cat {
+        +String color
+        +meow()
+        +scratch()
+    }
+    class Bird {
+        +float wingspan
+        +fly()
+        +sing()
+    }
+    Animal <|-- Dog
+    Animal <|-- Cat
+    Animal <|-- Bird
+```
+
+## 状态图 (State Diagram)
+
+```mermaid
+stateDiagram-v2
+    [*] --> 待处理
+    待处理 --> 处理中 : 开始处理
+    处理中 --> 已完成 : 处理成功
+    处理中 --> 失败 : 处理失败
+    失败 --> 处理中 : 重试
+    失败 --> 已取消 : 取消
+    已完成 --> [*]
+    已取消 --> [*]
+```
+
+## 饼图 (Pie Chart)
+
+```mermaid
+pie showData
+    title 技术栈使用占比
+    "Vue.js" : 35
+    "React" : 30
+    "Angular" : 15
+    "Svelte" : 10
+    "其他" : 10
+```
+
+## ER 图 (Entity Relationship)
+
+```mermaid
+erDiagram
+    USER ||--o{ ORDER : places
+    USER {
+        int id PK
+        string name
+        string email
+    }
+    ORDER ||--|{ ORDER_ITEM : contains
+    ORDER {
+        int id PK
+        date created_at
+        int user_id FK
+    }
+    ORDER_ITEM }|--|| PRODUCT : references
+    ORDER_ITEM {
+        int id PK
+        int quantity
+        int order_id FK
+        int product_id FK
+    }
+    PRODUCT {
+        int id PK
+        string name
+        float price
+    }
 ```
 
 ### 完整的配置示例
@@ -483,35 +627,61 @@ interface MermaidSlotProps {
       enableAnimate: true,
       codeBlockActions: [
         {
-          key: 'copy',
-          icon: '📋',
-          title: '复制代码',
-          onClick: ({ code, copy }) => copy(code)
+          key: 'run',
+          title: '运行代码',
+          icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7L8 5z" fill="currentColor"/></svg>',
+          onClick: (props) => {
+            console.log('运行代码:', props.code)
+            alert('运行代码功能（示例）')
+          },
+          show: (props) => ['javascript', 'typescript', 'js', 'ts'].includes(props.language)
         }
       ],
       mermaidActions: [
         {
-          key: 'zoom-in',
-          icon: '🔍',
-          title: '放大图表',
-          onClick: ({ zoomIn }) => zoomIn()
+          key: 'edit',
+          title: '编辑图表',
+          icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+          onClick: (props) => {
+            console.log('编辑图表:', props.rawContent)
+            alert('编辑图表功能（示例）')
+          }
         }
       ]
     }"
+    :code-x-render="codeXRender"
   />
 </template>
-```
 
-````markdown
-```mermaid
-graph TD
-    A[开始] --> B{判断条件}
-    B -->|是| C[执行操作]
-    B -->|否| D[跳过]
-    C --> E[结束]
-    D --> E
+<script setup>
+// 自定义渲染器配置
+const codeXRender = {
+  json: ({ content, isDark }) => {
+    try {
+      const json = JSON.parse(content)
+      return `<div class="json-viewer" style="background: ${isDark ? '#1e1e1e' : '#f5f5f5'}; padding: 12px; border-radius: 4px; font-family: monospace; white-space: pre-wrap;">${JSON.stringify(json, null, 2)}</div>`
+    } catch {
+      return `<div style="color: red;">JSON 解析错误</div>`
+    }
+  },
+  echarts: ({ content, isDark }) => {
+    try {
+      const config = JSON.parse(content)
+      const chartId = 'chart-' + Math.random().toString(36).substr(2, 9)
+      return `<div id="${chartId}" style="height: 300px;"></div>
+      <script>
+        setTimeout(() => {
+          const chart = echarts.init(document.getElementById('${chartId}'), '${isDark ? 'dark' : 'default'}')
+          chart.setOption(${JSON.stringify(config)})
+        }, 100)
+      <\/script>`
+    } catch {
+      return `<div style="color: red;">ECharts 配置错误</div>`
+    }
+  }
+}
+</script>
 ```
-````
 
 ### 表格
 
