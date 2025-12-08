@@ -88,7 +88,7 @@ let mermaidPromise: Promise<any> | null = null
 async function loadMermaid() {
   if (typeof window === 'undefined') return null
   if (!mermaidPromise) {
-    mermaidPromise = import('mermaid').then(m => m.default)
+    mermaidPromise = import('mermaid').then((m) => m.default)
   }
   return mermaidPromise
 }
@@ -122,7 +122,7 @@ function addToRenderQueue(task: RenderTask) {
 }
 
 export function useMermaid(content: string | Ref<string>, options: UseMermaidOptionsInput = {}): UseMermaidResult {
-  const optionsRef = computed(() => typeof options === 'object' && 'value' in options ? options.value : options)
+  const optionsRef = computed(() => (typeof options === 'object' && 'value' in options ? options.value : options))
   const mermaidConfig = computed(() => ({
     suppressErrorRendering: true,
     startOnLoad: false,
@@ -137,9 +137,7 @@ export function useMermaid(content: string | Ref<string>, options: UseMermaidOpt
   const getRenderContainer = () => {
     const containerOption = optionsRef.value.container
     if (containerOption) {
-      return typeof containerOption === 'object' && 'value' in containerOption
-        ? containerOption.value
-        : containerOption
+      return typeof containerOption === 'object' && 'value' in containerOption ? containerOption.value : containerOption
     }
     return null
   }
@@ -206,10 +204,7 @@ export function useMermaid(content: string | Ref<string>, options: UseMermaidOpt
   )
 
   watch(
-    [
-      () => (typeof content === 'string' ? content : content.value),
-      () => mermaidConfig.value,
-    ],
+    [() => (typeof content === 'string' ? content : content.value), () => mermaidConfig.value],
     () => {
       throttledRender()
     },
@@ -285,7 +280,7 @@ export function useMermaidZoom(options: UseMermaidZoomOptions): MermaidZoomContr
         onStart(e.clientX, e.clientY)
       }
     }
-    
+
     const onMouseMove = (e: MouseEvent) => {
       if (isInteractingWithMermaid) {
         onMove(e.clientX, e.clientY)
@@ -302,8 +297,8 @@ export function useMermaidZoom(options: UseMermaidZoomOptions): MermaidZoomContr
       const mouseX = e.clientX - containerRect.left
       const mouseY = e.clientY - containerRect.top
 
-      const svgCenterX = (svgRect.left - containerRect.left) + svgRect.width / 2
-      const svgCenterY = (svgRect.top - containerRect.top) + svgRect.height / 2
+      const svgCenterX = svgRect.left - containerRect.left + svgRect.width / 2
+      const svgCenterY = svgRect.top - containerRect.top + svgRect.height / 2
 
       const offsetX = (mouseX - svgCenterX - posX.value) / scale.value
       const offsetY = (mouseY - svgCenterY - posY.value) / scale.value
@@ -341,7 +336,7 @@ export function useMermaidZoom(options: UseMermaidZoomOptions): MermaidZoomContr
         }
       }
     }
-    
+
     const onTouchMove = (e: TouchEvent) => {
       // 只在触摸Mermaid容器时才处理
       if (isInteractingWithMermaid) {

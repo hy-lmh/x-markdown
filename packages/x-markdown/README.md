@@ -19,7 +19,6 @@
 
 </div>
 
-
 ## ✨ 特性
 
 - 🚀 **Vue 3 组合式 API** - 基于 Vue 3 Composition API 构建
@@ -110,51 +109,51 @@ const content = ref('# Large Document\n...')
 
 ### Props 属性
 
-| 属性 | 类型 | 默认值 | 说明 |
-|------|------|--------|------|
-| `markdown` | `string` | `''` | Markdown 字符串内容 |
-| `allowHtml` | `boolean` | `false` | 是否允许渲染 HTML |
-| `enableLatex` | `boolean` | `true` | 是否启用 LaTeX 数学公式支持 |
-| `enableAnimate` | `boolean` | `false` | 是否启用流式动画效果 |
-| `enableBreaks` | `boolean` | `true` | 是否将换行符转换为 `<br>` |
-| `isDark` | `boolean` | `false` | 是否为深色模式 |
-| `showCodeBlockHeader` | `boolean` | `true` | 是否显示代码块头部 |
-| `codeMaxHeight` | `string` | `undefined` | 代码块最大高度，如 '300px' |
-| `codeBlockActions` | `CodeBlockAction[]` | `[]` | 代码块自定义操作按钮 |
-| `mermaidActions` | `MermaidAction[]` | `[]` | Mermaid 图表自定义操作按钮 |
-| `codeXRender` | `object` | `{}` | 自定义代码块渲染函数 |
-| `customAttrs` | `CustomAttrs` | `{}` | 自定义属性对象 |
-| `remarkPlugins` | `PluggableList` | `[]` | remark 插件列表 |
-| `rehypePlugins` | `PluggableList` | `[]` | rehype 插件列表 |
-| `sanitize` | `boolean` | `false` | 是否启用内容清洗 |
-| `sanitizeOptions` | `SanitizeOptions` | `{}` | 清洗配置选项 |
+| 属性                  | 类型                | 默认值      | 说明                        |
+| --------------------- | ------------------- | ----------- | --------------------------- |
+| `markdown`            | `string`            | `''`        | Markdown 字符串内容         |
+| `allowHtml`           | `boolean`           | `false`     | 是否允许渲染 HTML           |
+| `enableLatex`         | `boolean`           | `true`      | 是否启用 LaTeX 数学公式支持 |
+| `enableAnimate`       | `boolean`           | `false`     | 是否启用流式动画效果        |
+| `enableBreaks`        | `boolean`           | `true`      | 是否将换行符转换为 `<br>`   |
+| `isDark`              | `boolean`           | `false`     | 是否为深色模式              |
+| `showCodeBlockHeader` | `boolean`           | `true`      | 是否显示代码块头部          |
+| `codeMaxHeight`       | `string`            | `undefined` | 代码块最大高度，如 '300px'  |
+| `codeBlockActions`    | `CodeBlockAction[]` | `[]`        | 代码块自定义操作按钮        |
+| `mermaidActions`      | `MermaidAction[]`   | `[]`        | Mermaid 图表自定义操作按钮  |
+| `codeXRender`         | `object`            | `{}`        | 自定义代码块渲染函数        |
+| `customAttrs`         | `CustomAttrs`       | `{}`        | 自定义属性对象              |
+| `remarkPlugins`       | `PluggableList`     | `[]`        | remark 插件列表             |
+| `rehypePlugins`       | `PluggableList`     | `[]`        | rehype 插件列表             |
+| `sanitize`            | `boolean`           | `false`     | 是否启用内容清洗            |
+| `sanitizeOptions`     | `SanitizeOptions`   | `{}`        | 清洗配置选项                |
 
 ### CodeXProps 代码块配置
 
 ```ts
 interface CodeXProps {
-  codeLightTheme?: string        // 亮色主题，默认 'vitesse-light'
-  codeDarkTheme?: string         // 暗色主题，默认 'vitesse-dark'
-  showCodeBlockHeader?: boolean  // 是否显示代码块头部
-  codeMaxHeight?: string         // 代码块最大高度，如 '300px'
-  enableAnimate?: boolean        // 是否启用代码块动画
-  codeBlockActions?: CodeBlockAction[]  // 代码块自定义操作按钮
-  mermaidActions?: MermaidAction[]  // Mermaid 图表自定义操作按钮
+  codeLightTheme?: string // 亮色主题，默认 'vitesse-light'
+  codeDarkTheme?: string // 暗色主题，默认 'vitesse-dark'
+  showCodeBlockHeader?: boolean // 是否显示代码块头部
+  codeMaxHeight?: string // 代码块最大高度，如 '300px'
+  enableAnimate?: boolean // 是否启用代码块动画
+  codeBlockActions?: CodeBlockAction[] // 代码块自定义操作按钮
+  mermaidActions?: MermaidAction[] // Mermaid 图表自定义操作按钮
 }
 
 interface CodeBlockAction {
-  key: string                    // 唯一标识符
-  title: string                  // 按钮标题
-  icon: string                   // 按钮图标（SVG 或文本）
-  onClick: (props: any) => void  // 点击回调函数
+  key: string // 唯一标识符
+  title: string // 按钮标题
+  icon: string // 按钮图标（SVG 或文本）
+  onClick: (props: any) => void // 点击回调函数
   show?: (props: any) => boolean // 条件显示函数（可选）
 }
 
 interface MermaidAction {
-  key: string                    // 唯一标识符
-  title: string                  // 按钮标题
-  icon: string                   // 按钮图标（SVG 或文本）
-  onClick: (props: any) => void  // 点击回调函数
+  key: string // 唯一标识符
+  title: string // 按钮标题
+  icon: string // 按钮图标（SVG 或文本）
+  onClick: (props: any) => void // 点击回调函数
   show?: (props: any) => boolean // 条件显示函数（可选）
 }
 ```
@@ -167,7 +166,7 @@ interface MermaidAction {
     codeLightTheme: 'github-light',
     codeDarkTheme: 'github-dark',
     showCodeBlockHeader: true,
-    codeMaxHeight: '400px'
+    codeMaxHeight: '400px',
   }"
 />
 ```
@@ -203,7 +202,7 @@ const toggleTheme = () => {
   :markdown="content"
   :code-x-props="{
     codeLightTheme: 'github-light',
-    codeDarkTheme: 'one-dark-pro'
+    codeDarkTheme: 'one-dark-pro',
   }"
 />
 ```
@@ -220,12 +219,12 @@ const toggleTheme = () => {
   :custom-attrs="{
     heading: (node, { level }) => ({
       class: ['heading', `heading-${level}`],
-      id: `heading-${level}`
+      id: `heading-${level}`,
     }),
     a: (node) => ({
       target: '_blank',
-      rel: 'noopener noreferrer'
-    })
+      rel: 'noopener noreferrer',
+    }),
   }"
 />
 ```
@@ -285,7 +284,7 @@ const codeXRender = {
   // 自定义 echarts 代码块渲染
   echarts: (props) => h(EchartsRenderer, { code: props.raw.content }),
   // 自定义行内代码渲染
-  inline: (props) => h('code', { class: 'custom-inline' }, props.raw.content)
+  inline: (props) => h('code', { class: 'custom-inline' }, props.raw.content),
 }
 </script>
 
@@ -304,7 +303,7 @@ import { h } from 'vue'
 
 const codeXSlots = {
   'header-left': ({ language }) => h('span', { class: 'lang-badge' }, language),
-  'header-right': ({ code, copy }) => h('button', { onClick: () => copy(code) }, '📋 复制')
+  'header-right': ({ code, copy }) => h('button', { onClick: () => copy(code) }, '📋 复制'),
 }
 </script>
 
@@ -379,12 +378,11 @@ const rehypePlugins = [rehypeSlug, rehypeAutolinkHeadings]
   :sanitize-options="{
     allowedTags: ['h1', 'h2', 'p', 'a', 'code', 'pre'],
     allowedAttributes: {
-      a: ['href', 'target']
-    }
+      a: ['href', 'target'],
+    },
   }"
 />
 ```
-
 
 ## 🌟 功能演示
 
@@ -395,7 +393,7 @@ const rehypePlugins = [rehypeSlug, rehypeAutolinkHeadings]
 ````markdown
 ```javascript
 function greet(name) {
-  console.log(`Hello, ${name}!`);
+  console.log(`Hello, ${name}!`)
 }
 ```
 
@@ -415,6 +413,7 @@ def fibonacci(n):
 行内公式: $E = mc^2$
 
 块级公式:
+
 $$
 \int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi}
 $$
@@ -638,12 +637,12 @@ const codeXRender = {
 支持 GFM 表格语法：
 
 ```markdown
-| 特性 | 状态 |
-|------|------|
-| Markdown | ✅ |
-| 代码高亮 | ✅ |
-| LaTeX | ✅ |
-| Mermaid | ✅ |
+| 特性     | 状态 |
+| -------- | ---- |
+| Markdown | ✅   |
+| 代码高亮 | ✅   |
+| LaTeX    | ✅   |
+| Mermaid  | ✅   |
 ```
 
 ### 任务列表

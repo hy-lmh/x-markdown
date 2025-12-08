@@ -44,9 +44,9 @@ defineOptions({
 // 定义组件 props，设置默认值
 const props = withDefaults(defineProps<SyntaxCodeBlockProps>(), {
   lightTheme: 'vitesse-light', // 默认亮色主题
-  darkTheme: 'vitesse-dark',   // 默认暗色主题
-  isDark: false,               // 默认使用亮色模式
-  enableAnimate: false,        // 默认不启用打字动画
+  darkTheme: 'vitesse-dark', // 默认暗色主题
+  isDark: false, // 默认使用亮色模式
+  enableAnimate: false, // 默认不启用打字动画
 })
 
 // 处理代码内容：去除首尾空白字符
@@ -60,8 +60,8 @@ const actualTheme = computed(() => (props.isDark ? props.darkTheme : props.light
 
 // 使用语法高亮 hook，获取解析后的代码行和预设样式
 const { lines, preStyle } = useHighlight(code, {
-  language,               // 代码语言
-  theme: actualTheme,     // 当前主题
+  language, // 代码语言
+  theme: actualTheme, // 当前主题
   colorReplacements: props.colorReplacements, // 颜色替换映射
 })
 
@@ -137,10 +137,10 @@ const codeContainerStyle = computed(() => ({
 
 // 暴露给父组件的属性和方法
 defineExpose({
-  lines,        // 解析后的代码行数据
-  code,         // 处理后的代码内容
-  language,     // 代码语言
-  actualTheme,  // 当前使用的主题
+  lines, // 解析后的代码行数据
+  code, // 处理后的代码内容
+  language, // 代码语言
+  actualTheme, // 当前使用的主题
 })
 </script>
 

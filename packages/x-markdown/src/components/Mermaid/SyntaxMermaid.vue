@@ -120,16 +120,8 @@ defineExpose({
 </script>
 
 <template>
-  <div
-    ref="containerRef"
-    class="syntax-mermaid"
-    :class="{ 'syntax-mermaid--dark': props.isDark }"
-  >
-    <div
-      ref="renderContainerRef"
-      class="syntax-mermaid__render-container"
-      aria-hidden="true"
-    />
+  <div ref="containerRef" class="syntax-mermaid" :class="{ 'syntax-mermaid--dark': props.isDark }">
+    <div ref="renderContainerRef" class="syntax-mermaid__render-container" aria-hidden="true" />
 
     <div v-if="isLoading" class="syntax-mermaid__loading">
       <slot name="loading">

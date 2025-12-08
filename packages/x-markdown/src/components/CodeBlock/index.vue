@@ -55,10 +55,7 @@
               @click="handleActionClick(action)"
             >
               <!-- 渲染图标：支持组件、字符串或渲染函数 -->
-              <component
-                :is="renderActionIcon(action)"
-                v-if="action.icon"
-              />
+              <component :is="renderActionIcon(action)" v-if="action.icon" />
             </button>
             <!-- 默认复制按钮 -->
             <button class="x-md-copy-btn" :class="{ 'x-md-copy-btn--copied': copied }" @click="copy(code)">
@@ -149,10 +146,10 @@ const toggleCollapse = () => {
 // 定义组件 props 默认值（类型从 types.d.ts 导入）
 const props = withDefaults(defineProps<CodeBlockProps>(), {
   lightTheme: 'vitesse-light', // 默认亮色主题
-  darkTheme: 'vitesse-dark',   // 默认暗色主题
-  isDark: false,               // 默认亮色模式
-  showCodeBlockHeader: true,   // 默认显示代码块头部
-  enableAnimate: false,        // 默认不启用动画
+  darkTheme: 'vitesse-dark', // 默认暗色主题
+  isDark: false, // 默认亮色模式
+  showCodeBlockHeader: true, // 默认显示代码块头部
+  enableAnimate: false, // 默认不启用动画
   codeBlockActions: undefined, // 默认无自定义操作按钮
 })
 
@@ -195,7 +192,7 @@ const slotProps = computed<CodeBlockSlotProps>(() => ({
 function renderActionIcon(action: CodeBlockAction): VNode | null {
   // 如果没有图标配置，返回 null
   if (!action.icon) return null
-  
+
   // 如果是字符串，使用 v-html 渲染（支持 SVG 字符串）
   if (typeof action.icon === 'string') {
     return h('span', {
@@ -203,7 +200,7 @@ function renderActionIcon(action: CodeBlockAction): VNode | null {
       innerHTML: action.icon,
     })
   }
-  
+
   // 如果是函数类型（渲染函数），调用函数获取 VNode
   if (typeof action.icon === 'function') {
     // 检查是否是渲染函数（非组件函数）
@@ -220,7 +217,7 @@ function renderActionIcon(action: CodeBlockAction): VNode | null {
     // 作为函数式组件处理
     return h(action.icon as any)
   }
-  
+
   // 如果是组件对象，直接渲染组件
   return h(action.icon as any)
 }
@@ -237,20 +234,20 @@ function handleActionClick(action: CodeBlockAction) {
 
 // 暴露给父组件的属性和方法
 defineExpose({
-  copy,                  // 复制方法
-  copied,                // 复制状态
-  collapsed,             // 折叠状态
-  toggleCollapse,        // 切换折叠
-  syntaxCodeBlockRef,    // 渲染组件引用
+  copy, // 复制方法
+  copied, // 复制状态
+  collapsed, // 折叠状态
+  toggleCollapse, // 切换折叠
+  syntaxCodeBlockRef, // 渲染组件引用
 })
 </script>
 
 <style scoped>
 /* ==================== 代码块容器样式 ==================== */
 .x-md-code-block {
-  border-radius: 8px;      /* 圆角边框 */
-  overflow: hidden;        /* 隐藏溢出内容 */
-  font-size: 0;            /* 消除内联元素间隙 */
+  border-radius: 8px; /* 圆角边框 */
+  overflow: hidden; /* 隐藏溢出内容 */
+  font-size: 0; /* 消除内联元素间隙 */
   background: rgba(0, 0, 0, 0.03); /* 浅色背景 */
 }
 
@@ -261,57 +258,57 @@ defineExpose({
 
 /* ==================== 头部工具栏样式 ==================== */
 .x-md-code-header {
-  display: flex;                     /* 弹性布局 */
-  justify-content: space-between;    /* 两端对齐 */
-  align-items: center;               /* 垂直居中 */
-  padding: 8px 16px;                 /* 内边距 */
-  background: rgba(0, 0, 0, 0.05);   /* 半透明背景 */
-  color: #333;                       /* 文字颜色 */
+  display: flex; /* 弹性布局 */
+  justify-content: space-between; /* 两端对齐 */
+  align-items: center; /* 垂直居中 */
+  padding: 8px 16px; /* 内边距 */
+  background: rgba(0, 0, 0, 0.05); /* 半透明背景 */
+  color: #333; /* 文字颜色 */
 }
 
 /* 暗色主题头部 */
 .x-md-code-block.x-md-code-block--dark .x-md-code-header {
-  background: rgba(0, 0, 0, 0.25);   /* 更深的背景 */
-  color: #fff;                       /* 白色文字 */
+  background: rgba(0, 0, 0, 0.25); /* 更深的背景 */
+  color: #fff; /* 白色文字 */
 }
 
 /* 头部左右区域布局 */
 .x-md-code-header__left,
 .x-md-code-header__right {
-  display: flex;       /* 弹性布局 */
+  display: flex; /* 弹性布局 */
   align-items: center; /* 垂直居中 */
-  gap: 8px;            /* 元素间距 */
+  gap: 8px; /* 元素间距 */
 }
 
 /* 语言标识样式 */
 .x-md-code-lang {
-  font-size: 12px;             /* 字体大小 */
-  font-weight: 500;            /* 字重 */
-  opacity: 0.6;                /* 透明度 */
-  text-transform: lowercase;   /* 小写显示 */
+  font-size: 12px; /* 字体大小 */
+  font-weight: 500; /* 字重 */
+  opacity: 0.6; /* 透明度 */
+  text-transform: lowercase; /* 小写显示 */
 }
 
 /* ==================== 复制按钮样式 ==================== */
 .x-md-copy-btn {
-  display: flex;              /* 弹性布局 */
-  align-items: center;        /* 垂直居中 */
-  justify-content: center;    /* 水平居中 */
-  width: 28px;                /* 按钮宽度 */
-  height: 28px;               /* 按钮高度 */
-  padding: 0;                 /* 清除内边距 */
-  border: none;               /* 无边框 */
-  border-radius: 4px;         /* 圆角 */
-  background: transparent;    /* 透明背景 */
-  color: inherit;             /* 继承文字颜色 */
-  cursor: pointer;            /* 手型光标 */
-  opacity: 0.7;               /* 默认透明度 */
-  transition: all 0.2s ease;  /* 过渡动画 */
+  display: flex; /* 弹性布局 */
+  align-items: center; /* 垂直居中 */
+  justify-content: center; /* 水平居中 */
+  width: 28px; /* 按钮宽度 */
+  height: 28px; /* 按钮高度 */
+  padding: 0; /* 清除内边距 */
+  border: none; /* 无边框 */
+  border-radius: 4px; /* 圆角 */
+  background: transparent; /* 透明背景 */
+  color: inherit; /* 继承文字颜色 */
+  cursor: pointer; /* 手型光标 */
+  opacity: 0.7; /* 默认透明度 */
+  transition: all 0.2s ease; /* 过渡动画 */
 }
 
 /* 复制按钮悬停状态 */
 .x-md-copy-btn:hover {
-  opacity: 1;                        /* 完全不透明 */
-  background: rgba(0, 0, 0, 0.08);   /* 显示背景 */
+  opacity: 1; /* 完全不透明 */
+  background: rgba(0, 0, 0, 0.08); /* 显示背景 */
 }
 
 /* 暗色主题复制按钮悬停 */
@@ -321,8 +318,8 @@ defineExpose({
 
 /* 复制成功状态 */
 .x-md-copy-btn.x-md-copy-btn--copied {
-  opacity: 1;          /* 完全不透明 */
-  color: #22c55e;      /* 绿色表示成功 */
+  opacity: 1; /* 完全不透明 */
+  color: #22c55e; /* 绿色表示成功 */
 }
 
 /* 复制图标 */
@@ -332,25 +329,25 @@ defineExpose({
 
 /* ==================== 自定义操作按钮样式 ==================== */
 .x-md-action-btn {
-  display: flex;              /* 弹性布局 */
-  align-items: center;        /* 垂直居中 */
-  justify-content: center;    /* 水平居中 */
-  width: 28px;                /* 按钮宽度 */
-  height: 28px;               /* 按钮高度 */
-  padding: 0;                 /* 清除内边距 */
-  border: none;               /* 无边框 */
-  border-radius: 4px;         /* 圆角 */
-  background: transparent;    /* 透明背景 */
-  color: inherit;             /* 继承文字颜色 */
-  cursor: pointer;            /* 手型光标 */
-  opacity: 0.7;               /* 默认透明度 */
-  transition: all 0.2s ease;  /* 过渡动画 */
+  display: flex; /* 弹性布局 */
+  align-items: center; /* 垂直居中 */
+  justify-content: center; /* 水平居中 */
+  width: 28px; /* 按钮宽度 */
+  height: 28px; /* 按钮高度 */
+  padding: 0; /* 清除内边距 */
+  border: none; /* 无边框 */
+  border-radius: 4px; /* 圆角 */
+  background: transparent; /* 透明背景 */
+  color: inherit; /* 继承文字颜色 */
+  cursor: pointer; /* 手型光标 */
+  opacity: 0.7; /* 默认透明度 */
+  transition: all 0.2s ease; /* 过渡动画 */
 }
 
 /* 自定义操作按钮悬停状态 */
 .x-md-action-btn:hover {
-  opacity: 1;                        /* 完全不透明 */
-  background: rgba(0, 0, 0, 0.08);   /* 显示背景 */
+  opacity: 1; /* 完全不透明 */
+  background: rgba(0, 0, 0, 0.08); /* 显示背景 */
 }
 
 /* 暗色主题自定义操作按钮悬停 */
@@ -360,46 +357,46 @@ defineExpose({
 
 /* 禁用状态 */
 .x-md-action-btn.x-md-action-btn--disabled {
-  opacity: 0.3;              /* 降低透明度 */
-  cursor: not-allowed;       /* 禁止光标 */
-  pointer-events: none;      /* 禁止点击 */
+  opacity: 0.3; /* 降低透明度 */
+  cursor: not-allowed; /* 禁止光标 */
+  pointer-events: none; /* 禁止点击 */
 }
 
 /* 图标容器 */
 .x-md-action-icon {
-  display: flex;              /* 弹性布局 */
-  align-items: center;        /* 垂直居中 */
-  justify-content: center;    /* 水平居中 */
+  display: flex; /* 弹性布局 */
+  align-items: center; /* 垂直居中 */
+  justify-content: center; /* 水平居中 */
 }
 
 /* 图标内的 SVG 样式 */
 .x-md-action-icon :deep(svg) {
-  width: 16px;                /* 统一图标宽度 */
-  height: 16px;               /* 统一图标高度 */
-  flex-shrink: 0;             /* 防止图标被压缩 */
+  width: 16px; /* 统一图标宽度 */
+  height: 16px; /* 统一图标高度 */
+  flex-shrink: 0; /* 防止图标被压缩 */
 }
 
 /* ==================== 折叠按钮样式 ==================== */
 .x-md-collapse-btn {
-  display: flex;              /* 弹性布局 */
-  align-items: center;        /* 垂直居中 */
-  justify-content: center;    /* 水平居中 */
-  width: 20px;                /* 按钮宽度 */
-  height: 20px;               /* 按钮高度 */
-  padding: 0;                 /* 清除内边距 */
-  border: none;               /* 无边框 */
-  border-radius: 4px;         /* 圆角 */
-  background: transparent;    /* 透明背景 */
-  color: inherit;             /* 继承文字颜色 */
-  cursor: pointer;            /* 手型光标 */
-  opacity: 0.5;               /* 默认较低透明度 */
-  transition: all 0.2s ease;  /* 过渡动画 */
+  display: flex; /* 弹性布局 */
+  align-items: center; /* 垂直居中 */
+  justify-content: center; /* 水平居中 */
+  width: 20px; /* 按钮宽度 */
+  height: 20px; /* 按钮高度 */
+  padding: 0; /* 清除内边距 */
+  border: none; /* 无边框 */
+  border-radius: 4px; /* 圆角 */
+  background: transparent; /* 透明背景 */
+  color: inherit; /* 继承文字颜色 */
+  cursor: pointer; /* 手型光标 */
+  opacity: 0.5; /* 默认较低透明度 */
+  transition: all 0.2s ease; /* 过渡动画 */
 }
 
 /* 折叠按钮悬停状态 */
 .x-md-collapse-btn:hover {
-  opacity: 1;                        /* 完全不透明 */
-  background: rgba(0, 0, 0, 0.08);   /* 显示背景 */
+  opacity: 1; /* 完全不透明 */
+  background: rgba(0, 0, 0, 0.08); /* 显示背景 */
 }
 
 /* 暗色主题折叠按钮悬停 */
@@ -421,13 +418,13 @@ defineExpose({
 .x-md-code-body {
   overflow: hidden; /* 隐藏溢出（用于折叠动画） */
   transition:
-    max-height 0.3s ease,  /* 高度过渡 */
-    opacity 0.2s ease;     /* 透明度过渡 */
+    max-height 0.3s ease,
+    /* 高度过渡 */ opacity 0.2s ease; /* 透明度过渡 */
 }
 
 /* 折叠状态 */
 .x-md-code-body--collapsed {
   max-height: 0 !important; /* 高度为 0 */
-  opacity: 0;               /* 完全透明 */
+  opacity: 0; /* 完全透明 */
 }
 </style>
